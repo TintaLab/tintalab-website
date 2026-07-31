@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="TintaLab Print Hub — documents, photos, rush IDs, Sintra boards, ref magnets, lamination and more in Pinamalayan, Oriental Mindoro.">
+  <title>TintaLab Print Hub</title>
+  <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="announcement"><span id="announcement"></span></div>
+
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="#home" class="brand" aria-label="TintaLab home">
+        <img src="assets/logo-mark.svg" alt="" class="brand-mark">
+        <span class="brand-text">Tinta<span>Lab</span><small>PRINT HUB</small></span>
+      </a>
+
+      <button class="menu-button" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#services">Services</a>
+        <a href="#finishes">Finishes</a>
+        <a href="#sizes">Photo Sizes</a>
+        <a href="#gallery">Samples</a>
+        <a href="#about">About</a>
+        <a href="#contact" class="button button-small">Message Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-blob blob-one"></div>
+      <div class="hero-blob blob-two"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <div class="eyebrow">YOUR FRIENDLY NEIGHBORHOOD PRINT HUB</div>
+          <h1><span id="tagline">Print smart.</span><br><strong>Make it memorable.</strong></h1>
+          <p id="subTagline"></p>
+          <div class="hero-actions">
+            <a href="#services" class="button">Explore Services</a>
+            <a href="#contact" class="button button-secondary">Send an Inquiry</a>
+          </div>
+          <div class="trust-row">
+            <div><b>Fast</b><span>Simple ordering</span></div>
+            <div><b>Clean</b><span>Careful finishing</span></div>
+            <div><b>Personal</b><span>Made for your project</span></div>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal">
+          <div class="mascot-card">
+            <img src="assets/mascot.svg" alt="TintaLab orange octopus mascot holding a printed photo">
+            <div class="floating-card card-one"><span>✨</span> Premium finishes</div>
+            <div class="floating-card card-two"><span>🖨️</span> Print-ready</div>
+            <div class="floating-card card-three"><span>💙</span> Made with care</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="quick-strip">
+      <div class="container quick-grid">
+        <div><span>📍</span><p><small>Location</small><b id="addressTop"></b></p></div>
+        <div><span>🕒</span><p><small>Business hours</small><b id="hoursTop"></b></p></div>
+        <div><span>💬</span><p><small>Online inquiries</small><b>Facebook & Messenger</b></p></div>
+      </div>
+    </section>
+
+    <section class="section" id="services">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div>
+            <span class="eyebrow">WHAT WE CAN MAKE</span>
+            <h2>Services for everyday needs<br>and special memories.</h2>
+          </div>
+          <p>From a one-page document to a personalized display piece, TintaLab is building a practical selection of print services for students, families, professionals, and small businesses.</p>
+        </div>
+        <div class="services-grid" id="servicesGrid"></div>
+      </div>
+    </section>
+
+    <section class="section finishes-section" id="finishes">
+      <div class="container">
+        <div class="section-heading centered reveal">
+          <span class="eyebrow">PREMIUM PHOTOTOP COLLECTION</span>
+          <h2>Choose the finish that matches your style.</h2>
+          <p>Actual sample displays will be available so customers can see and feel the difference before ordering.</p>
+        </div>
+        <div class="finishes-grid" id="finishesGrid"></div>
+        <p class="fine-print">PhotoTop is optional and may have an additional charge depending on the selected finish and print size.</p>
+      </div>
+    </section>
+
+    <section class="section" id="sizes">
+      <div class="container split-layout">
+        <div class="size-copy reveal">
+          <span class="eyebrow">PHOTO PRINTING GUIDE</span>
+          <h2>From pocket-sized prints to full A4 memories.</h2>
+          <p>Choose a standard size, send your photo, and let TintaLab prepare a clean print-ready layout.</p>
+          <div class="tip-card">
+            <img src="assets/logo-mark.svg" alt="">
+            <p><b>Not sure which size to choose?</b><br>Send us your photo and tell us where you plan to display it. We’ll help you choose.</p>
+          </div>
+        </div>
+        <div class="size-table-wrap reveal">
+          <table>
+            <thead><tr><th>Photo Size</th><th>Dimensions</th></tr></thead>
+            <tbody id="photoSizesBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section gallery-section" id="gallery">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div>
+            <span class="eyebrow">SAMPLE WORKS</span>
+            <h2>See what TintaLab can create.</h2>
+          </div>
+          <p>These are editable placeholder samples for Website V1. Replace them with photos and videos of your actual practice projects as they become available.</p>
+        </div>
+        <div class="gallery-grid" id="galleryGrid"></div>
+      </div>
+    </section>
+
+    <section class="section about-section" id="about">
+      <div class="container about-grid">
+        <div class="about-visual reveal">
+          <div class="about-photo">
+            <img src="assets/mascot-working.svg" alt="TintaLab mascot operating a printer">
+          </div>
+          <div class="about-badge">Locally built in<br><b>Pinamalayan</b></div>
+        </div>
+        <div class="about-copy reveal">
+          <span class="eyebrow">ABOUT TINTALAB</span>
+          <h2>A small print hub built with big attention to detail.</h2>
+          <p>TintaLab Print Hub began as a home-based printing project focused on practical services, creative samples, and a friendly customer experience.</p>
+          <p>We are currently testing materials, improving production techniques, and preparing actual product samples—so every service can be offered with confidence and care.</p>
+          <div class="values-grid">
+            <div><span>01</span><b>Practice first</b><p>We test each service before offering it widely.</p></div>
+            <div><span>02</span><b>Clear choices</b><p>Customers can compare sizes, finishes, and add-ons.</p></div>
+            <div><span>03</span><b>Made with care</b><p>Every project receives hands-on attention.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section steps-section">
+      <div class="container">
+        <div class="section-heading centered reveal">
+          <span class="eyebrow">HOW TO ORDER</span>
+          <h2>Simple from inquiry to pickup.</h2>
+        </div>
+        <div class="steps-grid">
+          <div class="step reveal"><span>1</span><h3>Send your request</h3><p>Message us with your file, preferred service, size, and quantity.</p></div>
+          <div class="step reveal"><span>2</span><h3>Confirm the details</h3><p>We’ll confirm the material, finish, price, and expected completion time.</p></div>
+          <div class="step reveal"><span>3</span><h3>We prepare your order</h3><p>Your project is printed, checked, finished, and packed carefully.</p></div>
+          <div class="step reveal"><span>4</span><h3>Pickup or delivery</h3><p>We’ll message you when your order is ready. Delivery availability may vary.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta-section" id="contact">
+      <div class="container cta-card reveal">
+        <div>
+          <span class="eyebrow light">READY TO PRINT?</span>
+          <h2>Tell us what you want to make.</h2>
+          <p>Send your file or idea through Messenger. We’ll help you choose the right size, material, and finish.</p>
+          <div class="cta-buttons">
+            <a id="messengerButton" href="#" class="button button-light">Open Messenger</a>
+            <a id="facebookButton" href="#" class="button button-outline-light">Visit Facebook Page</a>
+          </div>
+        </div>
+        <img src="assets/mascot-wave.svg" alt="TintaLab mascot waving">
+      </div>
+
+      <div class="container contact-grid">
+        <div><small>LOCATION</small><b id="address"></b></div>
+        <div><small>CONTACT</small><b id="phone"></b><span id="email"></span></div>
+        <div><small>BUSINESS HOURS</small><b id="hours"></b></div>
+        <div><small>MAP</small><a id="mapLink" href="#">Open location map →</a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-wrap">
+      <a href="#home" class="brand footer-brand">
+        <img src="assets/logo-mark.svg" alt="" class="brand-mark">
+        <span class="brand-text">Tinta<span>Lab</span><small>PRINT HUB</small></span>
+      </a>
+      <p>© <span id="year"></span> TintaLab Print Hub. Built with care in Pinamalayan.</p>
+      <a href="#home">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script src="site-data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
