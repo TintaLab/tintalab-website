@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+    <rect width="800" height="600" fill="#edf5fb"/><rect x="85" y="65" width="630" height="470" rx="28" fill="#fff" stroke="#dce7ef" stroke-width="5"/>
+    <rect x="85" y="65" width="630" height="82" rx="28" fill="#225a8f"/><rect x="85" y="119" width="630" height="28" fill="#225a8f"/>
+    <text x="120" y="119" font-family="Arial" font-size="34" font-weight="900" fill="#fff">Rush ID Pictures</text>
+    <rect x="125" y="190" width="550" height="245" rx="18" fill="#e8f2fa"/><circle cx="218" cy="277" r="55" fill="#f28c28" opacity=".85"/>
+    <path d="M130 420 260 285l95 83 74-70 238 137z" fill="#225a8f"/><text x="400" y="491" text-anchor="middle" font-family="Arial" font-size="26" font-weight="700" fill="#173f68">1×1 • 2×2 • Passport</text>
+    </svg>
