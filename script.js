@@ -71,3 +71,40 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold: .08 });
 
 setTimeout(() => document.querySelectorAll(".reveal").forEach(el => observer.observe(el)), 20);
+// Simple image lightbox
+const lightbox = document.createElement("div");
+lightbox.className = "lightbox";
+lightbox.innerHTML = `
+  <button class="lightbox-close" aria-label="Close image">×</button>
+  <img src="" alt="">
+`;
+document.body.appendChild(lightbox);
+
+const lightboxImg = lightbox.querySelector("img");
+const lightboxClose = lightbox.querySelector(".lightbox-close");
+
+document.addEventListener("click", (e) => {
+  const image = e.target.closest(".gallery-card img");
+  if (!image) return;
+
+  lightboxImg.src = image.src;
+  lightboxImg.alt = image.alt;
+  lightbox.classList.add("open");
+});
+
+lightboxClose.addEventListener("click", () => {
+  lightbox.classList.remove("open");
+});
+
+lightbox.addEventListener("click", (e) => {
+  if (e.target === lightbox) {
+    lightbox.classList.remove("open");
+  }
+});
+
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    lightbox.classList.remove("open");
+  }
+});

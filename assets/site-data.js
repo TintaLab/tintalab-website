@@ -80,11 +80,11 @@ const SITE_DATA = {
     { name: "Holo", note: "Color-shifting broken-glass effect", className: "finish-holo" }
   ],
   gallery: [
-    { title: "PhotoTop Sample Set", category: "Photo Printing", image: "assets/sample-phototop.svg" },
-    { title: "Rush ID Layout", category: "ID Pictures", image: "assets/sample-id.svg" },
-    { title: "Sintra Display", category: "Mounted Prints", image: "assets/sample-sintra.svg" },
-    { title: "Ref Magnet Set", category: "Personalized Gifts", image: "assets/sample-magnet.svg" },
-    { title: "Document Printing", category: "Documents", image: "assets/sample-document.svg" },
-    { title: "Sticker Labels", category: "Stickers", image: "assets/sample-sticker.svg" }
+    { title: "Anime Art Sintra Board", category: "Sintra Board", image: "assets/products/sintra/sintra-01.jpg" },
+  { title: "Basketball Art Sintra Board", category: "Sintra Board", image: "assets/products/sintra/sintra-02.jpg" },
+  { title: "Custom Anime Sintra Board", category: "Sintra Board", image: "assets/products/sintra/sintra-03.jpg" },
+  { title: "One Piece Sintra Board", category: "Sintra Board", image: "assets/products/sintra/sintra-04.jpg" },
+  { title: "Custom Sintra Board Collection", category: "Sintra Board", image: "assets/products/sintra/sintra-05.jpg" },
+  { title: "Custom Laminated Signage", category: "Signage", image: "assets/products/signages/signages.jpg" }
   ]
 };
