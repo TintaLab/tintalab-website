@@ -23,7 +23,7 @@ function populate() {
   $("#hours").textContent = SITE_DATA.businessHours;
   $("#messengerButton").href = SITE_DATA.messengerUrl;
   $("#facebookButton").href = SITE_DATA.facebookUrl;
-  $("#mapLink").href = SITE_DATA.mapUrl;
+ 
   $("#year").textContent = new Date().getFullYear();
 
   $("#servicesGrid").innerHTML = SITE_DATA.services.map(s => `
@@ -36,11 +36,14 @@ function populate() {
   `).join("");
 
   $("#finishesGrid").innerHTML = SITE_DATA.finishes.map(f => `
-    <article class="finish-card ${f.className} reveal">
-      <div class="finish-swatch"></div>
-      <div><h3>${f.name}</h3><p>${f.note}</p></div>
-    </article>
-  `).join("");
+  <article class="finish-card ${f.className} reveal">
+    <img src="${f.image}" alt="${f.name} PhotoTop finish" class="finish-photo">
+    <div>
+      <h3>${f.name}</h3>
+      <p>${f.note}</p>
+    </div>
+  </article>
+`).join("");
 
   $("#photoSizesBody").innerHTML = SITE_DATA.photoSizes.map(row =>
     `<tr><td>${row[0]}</td><td>${row[1]}</td></tr>`
@@ -84,7 +87,7 @@ const lightboxImg = lightbox.querySelector("img");
 const lightboxClose = lightbox.querySelector(".lightbox-close");
 
 document.addEventListener("click", (e) => {
-  const image = e.target.closest(".gallery-card img");
+  const image = e.target.closest(".gallery-card img, .finish-photo");
   if (!image) return;
 
   lightboxImg.src = image.src;

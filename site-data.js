@@ -7,7 +7,7 @@ const SITE_DATA = {
   phone: "0936 978 4317",
   email: "tintalabprinthub@gmail.com",
   facebookUrl: "https://www.facebook.com/profile.php?id=61591481322961",
-  messengerUrl: "https://business.facebook.com/latest/inbox/messenger?asset_id=1263281876858931&business_id=1030246199391168&ir_qe_exposed=1&selected_item_id=1089025223525540&thread_type=FB_MESSAGE",
+  messengerUrl: "https://m.me/61591481322961",
   mapUrl: "#",
   businessHours: "Monday–Saturday • 8:00 AM–6:00 PM",
   announcement: "Soft opening soon — sample products and new finishes are currently being prepared.",
@@ -71,13 +71,13 @@ const SITE_DATA = {
     ["A4", "210 × 297 mm"]
   ],
   finishes: [
-    { name: "Glossy", note: "Bright shine and vivid color", className: "finish-glossy" },
-    { name: "Matte", note: "Soft, low-glare finish", className: "finish-matte" },
-    { name: "Leather", note: "Elegant textured surface", className: "finish-leather" },
-    { name: "Canvas", note: "Fine art-inspired texture", className: "finish-canvas" },
-    { name: "Glitter", note: "Sparkling decorative effect", className: "finish-glitter" },
-    { name: "3D", note: "Eye-catching dimensional look", className: "finish-3d" },
-    { name: "Holo", note: "Color-shifting broken-glass effect", className: "finish-holo" }
+    { name: "Glossy", note: "Bright shine and vivid color", className: "finish-glossy", image: "assets/products/phototop/glossy.jpg" },
+  { name: "Matte", note: "Soft, low-glare finish", className: "finish-matte", image: "assets/products/phototop/matte.jpg" },
+  { name: "Leather", note: "Elegant textured surface", className: "finish-leather", image: "assets/products/phototop/leather.jpg" },
+  { name: "Canvas", note: "Fine art-inspired texture", className: "finish-canvas", image: "assets/products/phototop/canvas.jpg" },
+  { name: "Glitter", note: "Sparkling decorative effect", className: "finish-glitter", image: "assets/products/phototop/glitter.jpg" },
+  { name: "3D", note: "Eye-catching dimensional look", className: "finish-3d", image: "assets/products/phototop/3D.jpg" },
+  { name: "Broken Glass", note: "Color-shifting broken-glass effect", className: "finish-holo", image: "assets/products/phototop/brokenglass.jpg" }
   ],
   gallery: [
     { title: "Anime Art Sintra Board", category: "Sintra Board", image: "assets/products/sintra/sintra-01.jpg" },
