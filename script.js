@@ -27,11 +27,12 @@ function populate() {
   $("#year").textContent = new Date().getFullYear();
 
   $("#servicesGrid").innerHTML = SITE_DATA.services.map(s => `
-    <article class="service-card reveal">
+    <article class="service-card reveal ${s.action ? "service-card-clickable" : ""}" ${s.action ? `data-service-action="${s.action}" role="button" tabindex="0" aria-label="View ${s.title} pricing"` : ""}>
       <div class="service-icon">${icons[s.icon] || icons.document}</div>
       <h3>${s.title}</h3>
       <p>${s.text}</p>
       <div class="tags">${s.tags.map(tag => `<span>${tag}</span>`).join("")}</div>
+      ${s.action ? `<span class="service-action">View pricing & options →</span>` : ""}
     </article>
   `).join("");
 
@@ -110,4 +111,124 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     lightbox.classList.remove("open");
   }
+});
+
+// Sintra pricing configurator
+const sintraConfig = SITE_DATA.sintraConfigurator;
+const sintraModal = document.createElement("div");
+sintraModal.className = "product-modal";
+sintraModal.setAttribute("aria-hidden", "true");
+sintraModal.innerHTML = `
+  <div class="product-modal-panel" role="dialog" aria-modal="true" aria-labelledby="sintraModalTitle">
+    <button class="product-modal-close" type="button" aria-label="Close pricing">×</button>
+    <div class="product-modal-grid">
+      <div class="product-preview">
+        <img src="${sintraConfig.sampleImage}" alt="TintaLab A4 Sintra Board sample" class="product-main-image">
+        <div class="included-card">
+          <span>✓ INCLUDED</span>
+          <p>${sintraConfig.baseNote}</p>
+        </div>
+      </div>
+      <div class="product-config">
+        <span class="eyebrow">BUILD YOUR SINTRA BOARD</span>
+        <h2 id="sintraModalTitle">${sintraConfig.title}</h2>
+        <p class="product-description">${sintraConfig.description}</p>
+        <div class="spec-grid">
+          ${sintraConfig.specs.map(spec => `<div><small>${spec[0]}</small><b>${spec[1]}</b></div>`).join("")}
+        </div>
+        <div class="base-price-row"><span>Base price</span><strong>₱${sintraConfig.basePrice}</strong></div>
+        <p class="config-label">Optional add-ons & savings</p>
+        <div class="addon-list">
+          ${sintraConfig.addOns.map(addon => {
+            const priceLabel = addon.price === 0 ? "FREE" : addon.price < 0 ? `−₱${Math.abs(addon.price)}` : `+₱${addon.price}`;
+            return `
+            <label class="addon-option">
+              <input type="checkbox" value="${addon.price}" data-addon-id="${addon.id}" data-addon-name="${addon.name}">
+              <span class="addon-check"></span>
+              <span class="addon-copy">
+                <b>${addon.name}</b>
+                <small>${addon.note}</small>
+              </span>
+              <strong>${priceLabel}</strong>
+            </label>`;
+          }).join("")}
+        </div>
+        <div class="total-card">
+          <span>Estimated total</span>
+          <strong id="sintraTotal">₱${sintraConfig.basePrice}</strong>
+        </div>
+        <div class="product-notes">
+          <b>Before ordering</b>
+          <ul>${sintraConfig.notes.map(note => `<li>${note}</li>`).join("")}</ul>
+        </div>
+        <p class="price-note">${sintraConfig.priceNote}</p>
+        <div class="config-actions">
+          <button type="button" class="button" id="copySintraOrder">Copy Order Summary</button>
+          <a class="button button-secondary" id="sintraMessenger" href="${SITE_DATA.messengerUrl}" target="_blank" rel="noopener">Open Messenger</a>
+        </div>
+        <p class="copy-feedback" id="copyFeedback" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+`;
+document.body.appendChild(sintraModal);
+
+const openSintraModal = () => {
+  sintraModal.classList.add("open");
+  sintraModal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+};
+
+const closeSintraModal = () => {
+  sintraModal.classList.remove("open");
+  sintraModal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
+};
+
+const updateSintraTotal = () => {
+  const selected = [...sintraModal.querySelectorAll('.addon-option input:checked')];
+  const total = sintraConfig.basePrice + selected.reduce((sum, box) => sum + Number(box.value), 0);
+  sintraModal.querySelector('#sintraTotal').textContent = `₱${total}`;
+  return { selected, total };
+};
+
+document.addEventListener("click", (e) => {
+  const card = e.target.closest('[data-service-action="sintra"]');
+  if (card) openSintraModal();
+});
+
+document.addEventListener("keydown", (e) => {
+  const card = e.target.closest?.('[data-service-action="sintra"]');
+  if (card && (e.key === "Enter" || e.key === " ")) {
+    e.preventDefault();
+    openSintraModal();
+  }
+});
+
+sintraModal.querySelector('.product-modal-close').addEventListener('click', closeSintraModal);
+sintraModal.addEventListener('click', (e) => {
+  if (e.target === sintraModal) closeSintraModal();
+});
+sintraModal.querySelectorAll('.addon-option input').forEach(input => input.addEventListener('change', updateSintraTotal));
+
+sintraModal.querySelector('#copySintraOrder').addEventListener('click', async () => {
+  const { selected, total } = updateSintraTotal();
+  const extras = selected.length ? selected.map(box => {
+    const price = Number(box.value);
+    const label = price === 0 ? "FREE" : price < 0 ? `−₱${Math.abs(price)}` : `+₱${price}`;
+    return `${box.dataset.addonName} (${label})`;
+  }).join(', ') : 'None';
+  const summary = `Hi TintaLab! I’d like to order an A4 Sintra Photo Board. Base: ₱${sintraConfig.basePrice}. Selected options: ${extras}. Estimated total: ₱${total}. I understand the final size may be slightly smaller than A4 depending on the design and that the file should be ready to print.`;
+  const feedback = sintraModal.querySelector('#copyFeedback');
+  try {
+    await navigator.clipboard.writeText(summary);
+    feedback.textContent = 'Order summary copied — paste it in Messenger. ✓';
+  } catch {
+    feedback.textContent = summary;
+  }
+});
+
+// Extend the existing Escape-key behavior to close the product configurator too.
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && sintraModal.classList.contains("open")) closeSintraModal();
 });

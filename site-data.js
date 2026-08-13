@@ -39,8 +39,9 @@ const SITE_DATA = {
     {
       icon: "sintra",
       title: "Sintra Photo Boards",
-      text: "Printed sticker-mounted Sintra boards with optional PhotoTop, corner protectors, and display stand.",
-      tags: ["A4", "With stand", "Premium finish"]
+      text: "A4 printed Sintra boards with lamination already included. Add a stand, back hook, or corner protectors to match how you want to display it.",
+      tags: ["A4", "250μ Lamination", "₱150"],
+      action: "sintra"
     },
     {
       icon: "magnet",
@@ -61,6 +62,32 @@ const SITE_DATA = {
       tags: ["Glossy", "Matte", "Labels"]
     }
   ],
+  sintraConfigurator: {
+    title: "A4 Sintra Photo Board",
+    basePrice: 150,
+    description: "A thick, durable display board made for photos, artwork, signs, gifts, and personalized displays. Your design is printed with pigment ink, protected with a 250-micron laminating film, then carefully mounted on a 3 mm Sintra board for a sturdy premium finish.",
+    baseNote: "Includes pigment-ink printing, 250-micron lamination, mounting on 3 mm Sintra board, and free basic image enhancement when needed.",
+    sampleImage: "assets/products/sintra/sintra-05.jpg",
+    specs: [
+      ["Printing", "Pigment ink"],
+      ["Board", "3 mm Sintra"],
+      ["Protection", "250-micron lamination"],
+      ["Editing", "Basic image enhancement is free"]
+    ],
+    addOns: [
+      { id: "stand", name: "Wooden Stand", price: 20, note: "For tabletop or shelf display." },
+      { id: "hook", name: "Back Hook", price: 10, note: "For hanging the board on a wall." },
+      { id: "corners", name: "Corner Protectors", price: 0, note: "Optional protective corner finish — FREE." },
+      { id: "branding", name: "TintaLab Mini Icon", price: -10, note: "Allow a small TintaLab icon on the lower part of the design and get ₱10 off." }
+    ],
+    notes: [
+      "Finished size may be slightly smaller than A4 depending on the design, image ratio, and required trimming.",
+      "Please send a ready-to-print design or image whenever possible.",
+      "Basic image enhancement is free. More complex editing may have an additional charge depending on the requested edit.",
+      "Estimated pricing applies to the standard A4 Sintra Photo Board configuration."
+    ],
+    priceNote: "Estimated total updates automatically as you select options. Final price will be confirmed before production."
+  },
   photoSizes: [
     ["Wallet", "50.8 × 76.2 mm"],
     ["Cute / 2R", "63.5 × 88.9 mm"],
