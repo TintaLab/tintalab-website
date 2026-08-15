@@ -41,6 +41,11 @@
   background: rgba(0, 0, 0, 0.65);
   padding: 30px 15px;
 }
+.print-modal.active {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
 
 .print-modal-content {
   position: relative;
