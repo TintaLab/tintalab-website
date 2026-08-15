@@ -339,5 +339,135 @@
 
   </div>
 </div>
+<!-- PHOTOCOPY & SCANNING MODAL -->
+<div id="copyScanModal" class="print-modal">
+  <div class="print-modal-content">
+
+    <button class="print-close" onclick="closeCopyScanModal()">×</button>
+
+    <h2>📄 Photocopy & Scanning</h2>
+    <p class="print-subtitle">
+      Select a service to calculate the estimated price.
+    </p>
+
+    <!-- SERVICE TYPE -->
+    <div class="print-field">
+      <label>Service</label>
+      <select id="copyScanService" onchange="updateCopyScanFields()">
+        <option value="photocopy">Photocopy</option>
+        <option value="scan">Scan Only – Soft Copy</option>
+        <option value="scanprint">Scan + Print</option>
+      </select>
+    </div>
+
+    <!-- PHOTOCOPY / PRINT OPTIONS -->
+    <div id="copyPrintOptions">
+
+      <div class="print-field">
+        <label>Document Content</label>
+        <select id="copyContent" onchange="calculateCopyScan()">
+          <option value="text">Text Only</option>
+          <option value="image">Text with Image</option>
+        </select>
+      </div>
+
+      <div class="print-field">
+        <label>Color Type</label>
+        <select id="copyColor" onchange="calculateCopyScan()">
+          <option value="bw">Black & White</option>
+          <option value="partial">Partially Colored</option>
+          <option value="full">Full Colored</option>
+        </select>
+      </div>
+
+      <div class="print-field">
+        <label>Paper Size</label>
+        <select id="copyPaper" onchange="calculateCopyScan()">
+          <option value="short">Short (8.5 × 11")</option>
+          <option value="a4">A4 (8.3 × 11.7")</option>
+          <option value="long">Long (8.5 × 13")</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- NUMBER OF SCANNED PAGES -->
+    <div id="scanPagesField" class="print-field" style="display:none;">
+      <label>Number of Pages to Scan</label>
+      <input
+        type="number"
+        id="scanPages"
+        value="1"
+        min="1"
+        oninput="calculateCopyScan()"
+      >
+    </div>
+
+    <!-- QUANTITY -->
+    <div id="copyQuantityField" class="print-field">
+      <label id="copyQuantityLabel">Quantity / Pages</label>
+      <input
+        type="number"
+        id="copyQuantity"
+        value="1"
+        min="1"
+        oninput="calculateCopyScan()"
+      >
+    </div>
+
+    <!-- RESULT -->
+    <div class="print-result">
+
+      <div class="result-row">
+        <span id="copyRateLabel">Price per page</span>
+        <strong id="copyRate">₱5.00</strong>
+      </div>
+
+      <div class="result-row">
+        <span>Regular Total</span>
+        <span id="copyRegularTotal">₱5.00</span>
+      </div>
+
+      <div class="result-row" id="copyDiscountRow">
+        <span>Bulk Discount</span>
+        <span id="copyDiscount">₱0.00</span>
+      </div>
+
+      <div class="result-total">
+        <span>Estimated Total</span>
+        <strong id="copyFinalTotal">₱5.00</strong>
+      </div>
+
+      <p id="copyDiscountMessage" class="discount-message"></p>
+
+    </div>
+
+    <!-- BULK INFO -->
+    <div id="copyBulkInfo" class="bulk-info">
+      <strong>Bulk Photocopy Discounts</strong>
+      <p>20–49 pages — 5% OFF</p>
+      <p>50–99 pages — 10% OFF</p>
+      <p>100+ pages — 15% OFF</p>
+    </div>
+
+    <!-- PRICE NOTE -->
+    <div class="price-review-note">
+      <strong>Price Note</strong>
+      <p>
+        Prices shown are estimates based on the selected document type,
+        color coverage, paper size, and quantity.
+      </p>
+      <p>
+        Final pricing may be adjusted after reviewing the original document.
+        We’ll confirm any adjustment before processing your order.
+      </p>
+    </div>
+
+    <button class="messenger-order-btn" onclick="sendCopyScanOrder()">
+      💬 Copy Order Details & Open Messenger
+    </button>
+
+  </div>
+</div>
 </body>
 </html>

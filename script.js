@@ -193,40 +193,18 @@ const updateSintraTotal = () => {
 };
 
 document.addEventListener("click", (e) => {
-  const sintraCard = e.target.closest('[data-service-action="sintra"]');
-  const documentCard = e.target.closest('[data-service-action="documentPrinting"]');
-  const copyScanCard = e.target.closest('[data-service-action="copyScan"]');
-
-  if (sintraCard) openSintraModal();
-
-  if (documentCard) {
-    openDocumentPrinting(e);
-
-    if (copyScanCard) {
-  openCopyScanModal();
-  }
+  const card = e.target.closest('[data-service-action="sintra"]');
+  if (card) openSintraModal();
 });
 
 document.addEventListener("keydown", (e) => {
-  const sintraCard = e.target.closest?.('[data-service-action="sintra"]');
-  const documentCard = e.target.closest?.('[data-service-action="documentPrinting"]');
-  const copyScanCard = e.target.closest?.('[data-service-action="copyScan"]');
-
-  if (sintraCard && (e.key === "Enter" || e.key === " ")) {
+  const card = e.target.closest?.('[data-service-action="sintra"]');
+  if (card && (e.key === "Enter" || e.key === " ")) {
     e.preventDefault();
     openSintraModal();
   }
-
-  if (documentCard && (e.key === "Enter" || e.key === " ")) {
-    e.preventDefault();
-    openDocumentPrinting(e);
-  }
-
-  if (copyScanCard && (e.key === "Enter" || e.key === " ")) {
-  e.preventDefault();
-  openCopyScanModal();
-  }
 });
+
 sintraModal.querySelector('.product-modal-close').addEventListener('click', closeSintraModal);
 sintraModal.addEventListener('click', (e) => {
   if (e.target === sintraModal) closeSintraModal();
@@ -490,4 +468,161 @@ Estimated Total: ${total}`;
 
     });
 
+}
+// ========================================
+// PHOTOCOPY & SCANNING CALCULATOR
+// ========================================
+
+const copyPrices = {
+  text: {
+    bw:      { short: 5, a4: 6, long: 7 },
+    partial: { short: 7, a4: 8, long: 9 },
+    full:    { short: 10, a4: 12, long: 14 }
+  },
+  image: {
+    bw:      { short: 7, a4: 8, long: 9 },
+    partial: { short: 12, a4: 14, long: 16 },
+    full:    { short: 18, a4: 20, long: 23 }
+  }
+};
+
+function openCopyScanModal() {
+  document.getElementById("copyScanModal").classList.add("active");
+  updateCopyScanFields();
+}
+
+function closeCopyScanModal() {
+  document.getElementById("copyScanModal").classList.remove("active");
+}
+
+function getScanFee(pages) {
+  pages = Math.max(1, Number(pages) || 1);
+  return 10 + Math.max(0, pages - 1) * 3;
+}
+
+function getBulkDiscount(quantity) {
+  if (quantity >= 100) return 0.15;
+  if (quantity >= 50) return 0.10;
+  if (quantity >= 20) return 0.05;
+  return 0;
+}
+
+function updateCopyScanFields() {
+  const service = document.getElementById("copyScanService").value;
+
+  const printOptions = document.getElementById("copyPrintOptions");
+  const scanPagesField = document.getElementById("scanPagesField");
+  const quantityField = document.getElementById("copyQuantityField");
+  const bulkInfo = document.getElementById("copyBulkInfo");
+
+  if (service === "photocopy") {
+    printOptions.style.display = "";
+    scanPagesField.style.display = "none";
+    quantityField.style.display = "";
+    bulkInfo.style.display = "";
+    document.getElementById("copyQuantityLabel").textContent =
+      "Quantity / Pages";
+  }
+
+  if (service === "scan") {
+    printOptions.style.display = "none";
+    scanPagesField.style.display = "";
+    quantityField.style.display = "none";
+    bulkInfo.style.display = "none";
+  }
+
+  if (service === "scanprint") {
+    printOptions.style.display = "";
+    scanPagesField.style.display = "";
+    quantityField.style.display = "";
+    bulkInfo.style.display = "";
+    document.getElementById("copyQuantityLabel").textContent =
+      "Number of Printed Copies";
+  }
+
+  calculateCopyScan();
+}
+
+function calculateCopyScan() {
+  const service = document.getElementById("copyScanService").value;
+
+  const content = document.getElementById("copyContent").value;
+  const color = document.getElementById("copyColor").value;
+  const paper = document.getElementById("copyPaper").value;
+
+  const quantity = Math.max(
+    1,
+    Number(document.getElementById("copyQuantity").value) || 1
+  );
+
+  const scanPages = Math.max(
+    1,
+    Number(document.getElementById("scanPages").value) || 1
+  );
+
+  let rate = 0;
+  let regularTotal = 0;
+  let discountAmount = 0;
+  let finalTotal = 0;
+
+  const rateLabel = document.getElementById("copyRateLabel");
+  const discountRow = document.getElementById("copyDiscountRow");
+  const discountMessage = document.getElementById("copyDiscountMessage");
+
+  if (service === "scan") {
+    const scanFee = getScanFee(scanPages);
+
+    rateLabel.textContent = "Scan Fee";
+    rate = scanFee;
+    regularTotal = scanFee;
+    finalTotal = scanFee;
+
+    discountRow.style.display = "none";
+    discountMessage.textContent =
+      scanPages === 1
+        ? "₱10 for the first scanned page."
+        : "₱10 first page + ₱3 for each additional page.";
+  } else {
+    rate = copyPrices[content][color][paper];
+
+    const printTotal = rate * quantity;
+    const discountRate = getBulkDiscount(quantity);
+    discountAmount = printTotal * discountRate;
+    const discountedPrintTotal = printTotal - discountAmount;
+
+    regularTotal = printTotal;
+    finalTotal = discountedPrintTotal;
+
+    if (service === "scanprint") {
+      const scanFee = getScanFee(scanPages);
+      regularTotal += scanFee;
+      finalTotal += scanFee;
+
+      rateLabel.textContent = "Print price per page";
+    } else {
+      rateLabel.textContent = "Price per page";
+    }
+
+    discountRow.style.display = "";
+
+    if (discountRate > 0) {
+      discountMessage.textContent =
+        `${Math.round(discountRate * 100)}% bulk discount applied to printing.`;
+    } else {
+      discountMessage.textContent =
+        "Bulk discount starts at 20 printed pages/copies.";
+    }
+  }
+
+  document.getElementById("copyRate").textContent =
+    `₱${rate.toFixed(2)}`;
+
+  document.getElementById("copyRegularTotal").textContent =
+    `₱${regularTotal.toFixed(2)}`;
+
+  document.getElementById("copyDiscount").textContent =
+    `-₱${discountAmount.toFixed(2)}`;
+
+  document.getElementById("copyFinalTotal").textContent =
+    `₱${finalTotal.toFixed(2)}`;
 }
