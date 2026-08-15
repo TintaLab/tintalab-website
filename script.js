@@ -193,8 +193,33 @@ const updateSintraTotal = () => {
 };
 
 document.addEventListener("click", (e) => {
-  const card = e.target.closest('[data-service-action="sintra"]');
-  if (card) openSintraModal();
+  const sintraCard = e.target.closest('[data-service-action="sintra"]');
+  const documentCard = e.target.closest('[data-service-action="documentPrinting"]');
+  const copyScanCard = e.target.closest('[data-service-action="copyScan"]');
+
+document.addEventListener("keydown", (e) => {
+  const sintraCard = e.target.closest?.('[data-service-action="sintra"]');
+  const documentCard = e.target.closest?.('[data-service-action="documentPrinting"]');
+  const copyScanCard = e.target.closest?.('[data-service-action="copyScan"]');
+
+  if (sintraCard && (e.key === "Enter" || e.key === " ")) {
+    e.preventDefault();
+    openSintraModal();
+  }
+
+  if (documentCard && (e.key === "Enter" || e.key === " ")) {
+    e.preventDefault();
+    openDocumentPrinting(e);
+  }
+
+  if (copyScanCard && (e.key === "Enter" || e.key === " ")) {
+    e.preventDefault();
+    openCopyScanModal();
+  }
+
+  if (copyScanCard) {
+    openCopyScanModal();
+  }
 });
 
 document.addEventListener("keydown", (e) => {
