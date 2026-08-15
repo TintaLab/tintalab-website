@@ -210,6 +210,7 @@ document.addEventListener("click", (e) => {
 document.addEventListener("keydown", (e) => {
   const sintraCard = e.target.closest?.('[data-service-action="sintra"]');
   const documentCard = e.target.closest?.('[data-service-action="documentPrinting"]');
+  const copyScanCard = e.target.closest?.('[data-service-action="copyScan"]');
 
   if (sintraCard && (e.key === "Enter" || e.key === " ")) {
     e.preventDefault();
@@ -219,6 +220,11 @@ document.addEventListener("keydown", (e) => {
   if (documentCard && (e.key === "Enter" || e.key === " ")) {
     e.preventDefault();
     openDocumentPrinting(e);
+  }
+
+  if (copyScanCard && (e.key === "Enter" || e.key === " ")) {
+  e.preventDefault();
+  openCopyScanModal();
   }
 });
 sintraModal.querySelector('.product-modal-close').addEventListener('click', closeSintraModal);
