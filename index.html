@@ -650,5 +650,228 @@
 
   </div>
 </div>
+<!-- LAMINATION & PRINTED SIGNAGE MODAL -->
+<div id="laminationModal" class="print-modal">
+  <div class="print-modal-content">
+
+    <button class="print-close" onclick="closeLaminationModal()">×</button>
+
+    <h2>🪪 Lamination & Printed Signs</h2>
+    <p class="print-subtitle">
+      Choose whether you need lamination only or a complete printed and laminated sign.
+    </p>
+
+    <!-- SERVICE TYPE -->
+    <div class="print-field">
+      <label>What do you need?</label>
+      <select id="laminationService" onchange="updateLaminationFields()">
+        <option value="lamination">Lamination Only</option>
+        <option value="signage">Printed & Laminated Signage</option>
+      </select>
+    </div>
+
+    <!-- =========================
+         LAMINATION ONLY
+    ========================== -->
+    <div id="laminationOnlyOptions">
+
+      <div class="print-field">
+        <label>Size</label>
+        <select id="laminationSize" onchange="updateLaminationFields()">
+          <option value="id">ID Size</option>
+          <option value="wallet">Wallet / 2R</option>
+          <option value="3r">3R</option>
+          <option value="4r">4R</option>
+          <option value="5r">5R</option>
+          <option value="a5">A5</option>
+          <option value="a4">A4</option>
+        </select>
+      </div>
+
+      <div class="print-field" id="laminationThicknessField">
+        <label>Protection Thickness</label>
+
+        <select id="laminationThickness" onchange="calculateLamination()">
+          <option value="125">Standard — 125 microns</option>
+          <option value="250">Heavy-Duty — 250 microns</option>
+        </select>
+
+        <div class="lamination-info">
+          <p>
+            <strong>Standard — 125 microns</strong><br>
+            Flexible and durable protection for regular documents and everyday use.
+          </p>
+
+          <p>
+            <strong>Heavy-Duty — 250 microns</strong><br>
+            Thicker and more rigid protection for items that need extra durability.
+          </p>
+
+          <small>
+            💡 Micron (µ) refers to the thickness of the laminating film.
+            Higher micron means thicker and more rigid protection.
+          </small>
+        </div>
+      </div>
+
+      <div id="idLaminationNote" class="bulk-info">
+        <strong>🪪 ID Lamination</strong>
+        <p>
+          ID-size lamination currently uses our pre-cut Standard 125-micron pouch
+          for a clean and consistent finish.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- =========================
+         PRINTED SIGNAGE
+    ========================== -->
+    <div id="signageOptions" style="display:none;">
+
+      <div class="print-field">
+        <label>Print Quality</label>
+
+        <select id="signageQuality" onchange="calculateLamination()">
+          <option value="basic">Basic — Temporary / Short-Term</option>
+          <option value="premium">Premium — Recommended</option>
+        </select>
+      </div>
+
+      <div class="signage-quality-info">
+
+        <div class="signage-option-box">
+          <strong>Basic Signage</strong>
+          <p>
+            Best for temporary or short-term indoor use.
+            Printed using dye ink on quality bond paper,
+            then laminated for added protection.
+          </p>
+          <span>Most affordable option</span>
+        </div>
+
+        <div class="signage-option-box recommended-signage">
+          <strong>
+            Premium Signage
+            <span class="recommended-tag">Recommended</span>
+          </strong>
+
+          <p>
+            Better for longer-term display and a more polished finish.
+            Printed using pigment ink on glossy photo paper
+            for improved print quality and durability.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="print-field">
+        <label>Protection Thickness</label>
+
+        <select id="signageThickness" onchange="calculateLamination()">
+          <option value="125">Standard — 125 microns</option>
+          <option value="250">Heavy-Duty — 250 microns</option>
+        </select>
+
+        <div class="lamination-info">
+          <p>
+            <strong>125µ Standard</strong> — flexible protection,
+            recommended for regular indoor signs.
+          </p>
+
+          <p>
+            <strong>250µ Heavy-Duty</strong> — thicker and more rigid,
+            ideal for longer-term or frequently handled signs.
+          </p>
+        </div>
+      </div>
+
+      <div class="print-field">
+        <label>File / Design</label>
+
+        <select id="signageDesign" onchange="calculateLamination()">
+          <option value="ready">Ready to Print — FREE</option>
+          <option value="design">AI-Assisted Design — +₱15</option>
+        </select>
+      </div>
+
+      <div class="price-review-note">
+        <strong>✨ AI-Assisted Design — ₱15</strong>
+        <p>
+          Tell us your text, purpose, preferred style, and other details.
+          We may use AI and design tools to create a simple print-ready signage layout.
+          Minor adjustments are included.
+        </p>
+      </div>
+
+      <p class="print-note">
+        Printed & Laminated Signage is currently available in
+        <strong>A4 size</strong>.
+      </p>
+
+    </div>
+
+    <!-- =========================
+         PRICE RESULT
+    ========================== -->
+    <div class="print-result">
+
+      <div class="result-row">
+        <span>Selected Service</span>
+        <strong id="laminationSelectedService">Lamination Only</strong>
+      </div>
+
+      <div class="result-row">
+        <span>Base Price</span>
+        <span id="laminationBasePrice">₱10.00</span>
+      </div>
+
+      <div class="result-row" id="laminationDesignRow" style="display:none;">
+        <span>Design Fee</span>
+        <span id="laminationDesignFee">₱0.00</span>
+      </div>
+
+      <div class="result-total">
+        <span>Estimated Total</span>
+        <strong id="laminationFinalTotal">₱10.00</strong>
+      </div>
+
+    </div>
+
+    <!-- SERVICE EXPLANATION -->
+    <div class="bulk-info">
+      <strong>💡 Which option should I choose?</strong>
+
+      <p>
+        <b>Lamination Only</b> — choose this if your document, card,
+        or print is already prepared and only needs protective lamination.
+      </p>
+
+      <p>
+        <b>Printed & Laminated Signage</b> — choose this if you want us
+        to produce the complete sign, from printing to final lamination.
+      </p>
+    </div>
+
+    <!-- FINAL NOTE -->
+    <div class="price-review-note">
+      <strong>Price Note</strong>
+      <p>
+        Final pricing may be adjusted if the submitted material requires
+        special handling, unusual trimming, additional preparation,
+        or work outside the options listed above.
+      </p>
+
+      <p>
+        We’ll confirm any adjustment with you before proceeding.
+      </p>
+    </div>
+
+    <button class="messenger-order-btn" onclick="sendLaminationOrder()">
+      💬 Copy Order Details & Open Messenger
+    </button>
+
+  </div>
+</div>
 </body>
 </html>

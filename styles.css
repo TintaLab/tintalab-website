@@ -573,4 +573,73 @@ body.modal-open{overflow:hidden}
   .photo-size-row input {
     width: 65px;
   }
+
+/* ========================================
+   LAMINATION & PRINTED SIGNAGE
+======================================== */
+
+.lamination-info {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #f7f9fb;
+  border: 1px solid #dde5ec;
+}
+
+.lamination-info p {
+  margin: 6px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #555;
+}
+
+.lamination-info strong {
+  color: #123b66;
+}
+
+.lamination-info small {
+  display: block;
+  margin-top: 10px;
+  color: #777;
+  line-height: 1.45;
+}
+
+.signage-quality-info {
+  display: grid;
+  gap: 12px;
+  margin: 12px 0 18px;
+}
+
+.signage-option-box {
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #fafafa;
+  border: 1px solid #e1e1e1;
+}
+
+.signage-option-box strong {
+  color: #123b66;
+}
+
+.signage-option-box p {
+  margin: 7px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #555;
+}
+
+.signage-option-box span {
+  font-size: 12px;
+  font-weight: 700;
+  color: #f58220;
+}
+
+.recommended-signage {
+  border: 2px solid #f58220;
+  background: #fff8f2;
+}
+
+#idLaminationNote {
+  margin-bottom: 18px;
+}
 }

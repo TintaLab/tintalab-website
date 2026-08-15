@@ -56,7 +56,8 @@ action: "photoPrinting"
       icon: "laminate",
       title: "Lamination",
       text: "Protection for IDs, documents, photos, certificates, and frequently handled materials.",
-      tags: ["ID", "A5", "A4"]
+      tags: ["ID", "A5", "A4"],
+action: "lamination"
     },
     {
       icon: "sticker",

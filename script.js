@@ -197,6 +197,7 @@ document.addEventListener("click", (e) => {
   const documentCard = e.target.closest('[data-service-action="documentPrinting"]');
   const copyScanCard = e.target.closest('[data-service-action="copyScan"]');
 const photoPrintingCard = e.target.closest('[data-service-action="photoPrinting"]');
+const laminationCard = e.target.closest('[data-service-action="lamination"]');
 
   if (sintraCard) {
     openSintraModal();
@@ -214,6 +215,10 @@ if (photoPrintingCard) {
   openPhotoPrintingModal();
 }
 
+if (laminationCard) {
+  openLaminationModal();
+}
+
 });
 
 document.addEventListener("keydown", (e) => {
@@ -221,6 +226,7 @@ document.addEventListener("keydown", (e) => {
   const documentCard = e.target.closest?.('[data-service-action="documentPrinting"]');
   const copyScanCard = e.target.closest?.('[data-service-action="copyScan"]');
 const photoPrintingCard = e.target.closest?.('[data-service-action="photoPrinting"]');
+const laminationCard = e.target.closest?.('[data-service-action="lamination"]');
 
   if (sintraCard && (e.key === "Enter" || e.key === " ")) {
     e.preventDefault();
@@ -240,6 +246,11 @@ const photoPrintingCard = e.target.closest?.('[data-service-action="photoPrintin
 if (photoPrintingCard && (e.key === "Enter" || e.key === " ")) {
   e.preventDefault();
   openPhotoPrintingModal();
+
+if (laminationCard && (e.key === "Enter" || e.key === " ")) {
+  e.preventDefault();
+  openLaminationModal();
+
 }
 });
 
@@ -1141,6 +1152,276 @@ Files will be submitted ready to print. I understand that extensive editing may 
 
 
   navigator.clipboard.writeText(orderDetails)
+    .then(() => {
+
+      alert(
+        "Order details copied! Paste them into Messenger."
+      );
+
+      window.open(
+        "https://m.me/61591481322961",
+        "_blank"
+      );
+
+    });
+}
+// ========================================
+// LAMINATION & PRINTED SIGNAGE CALCULATOR
+// ========================================
+
+const LAMINATION_PRICES = {
+  id: {
+    125: 10
+  },
+  wallet: {
+    125: 15,
+    250: 25
+  },
+  "3r": {
+    125: 15,
+    250: 30
+  },
+  "4r": {
+    125: 20,
+    250: 35
+  },
+  "5r": {
+    125: 25,
+    250: 40
+  },
+  a5: {
+    125: 25,
+    250: 40
+  },
+  a4: {
+    125: 35,
+    250: 60
+  }
+};
+
+const SIGNAGE_PRICES = {
+  basic: {
+    125: 45,
+    250: 65
+  },
+  premium: {
+    125: 60,
+    250: 80
+  }
+};
+
+const SIGNAGE_DESIGN_FEE = 15;
+
+
+// ---------- MODAL ----------
+
+function openLaminationModal() {
+  document.getElementById("laminationModal")
+    .classList.add("active");
+
+  updateLaminationFields();
+}
+
+function closeLaminationModal() {
+  document.getElementById("laminationModal")
+    .classList.remove("active");
+}
+
+
+// ---------- FIELD LOGIC ----------
+
+function updateLaminationFields() {
+  const service =
+    document.getElementById("laminationService").value;
+
+  const laminationOptions =
+    document.getElementById("laminationOnlyOptions");
+
+  const signageOptions =
+    document.getElementById("signageOptions");
+
+  const size =
+    document.getElementById("laminationSize").value;
+
+  const thickness =
+    document.getElementById("laminationThickness");
+
+  const idNote =
+    document.getElementById("idLaminationNote");
+
+
+  if (service === "lamination") {
+    laminationOptions.style.display = "";
+    signageOptions.style.display = "none";
+  }
+
+  if (service === "signage") {
+    laminationOptions.style.display = "none";
+    signageOptions.style.display = "";
+  }
+
+
+  // ID size = 125 microns only
+  if (service === "lamination" && size === "id") {
+    thickness.value = "125";
+    thickness.disabled = true;
+    idNote.style.display = "";
+  } else {
+    thickness.disabled = false;
+    idNote.style.display = "none";
+  }
+
+
+  calculateLamination();
+}
+
+
+// ---------- CALCULATOR ----------
+
+function calculateLamination() {
+
+  const service =
+    document.getElementById("laminationService").value;
+
+  let basePrice = 0;
+  let designFee = 0;
+
+  const selectedService =
+    document.getElementById("laminationSelectedService");
+
+  const designRow =
+    document.getElementById("laminationDesignRow");
+
+
+  if (service === "lamination") {
+
+    const size =
+      document.getElementById("laminationSize").value;
+
+    const thickness =
+      document.getElementById("laminationThickness").value;
+
+    basePrice =
+      LAMINATION_PRICES[size]?.[thickness] || 0;
+
+    selectedService.textContent =
+      "Lamination Only";
+
+    designRow.style.display = "none";
+
+  }
+
+
+  if (service === "signage") {
+
+    const quality =
+      document.getElementById("signageQuality").value;
+
+    const thickness =
+      document.getElementById("signageThickness").value;
+
+    const design =
+      document.getElementById("signageDesign").value;
+
+    basePrice =
+      SIGNAGE_PRICES[quality][thickness];
+
+    designFee =
+      design === "design"
+        ? SIGNAGE_DESIGN_FEE
+        : 0;
+
+    selectedService.textContent =
+      quality === "premium"
+        ? "Premium Printed Signage"
+        : "Basic Printed Signage";
+
+    designRow.style.display =
+      designFee > 0 ? "" : "none";
+  }
+
+
+  const finalTotal =
+    basePrice + designFee;
+
+
+  document.getElementById(
+    "laminationBasePrice"
+  ).textContent =
+    `₱${basePrice.toFixed(2)}`;
+
+
+  document.getElementById(
+    "laminationDesignFee"
+  ).textContent =
+    `₱${designFee.toFixed(2)}`;
+
+
+  document.getElementById(
+    "laminationFinalTotal"
+  ).textContent =
+    `₱${finalTotal.toFixed(2)}`;
+}
+
+
+// ---------- MESSENGER ORDER ----------
+
+function sendLaminationOrder() {
+
+  const service =
+    document.getElementById("laminationService").value;
+
+  let details = "";
+  let total =
+    document.getElementById("laminationFinalTotal")
+      .textContent;
+
+
+  if (service === "lamination") {
+
+    const size =
+      document.getElementById("laminationSize");
+
+    const thickness =
+      document.getElementById("laminationThickness");
+
+    details =
+`TintaLab Lamination Inquiry
+
+Service: Lamination Only
+Size: ${size.options[size.selectedIndex].text}
+Protection: ${thickness.options[thickness.selectedIndex].text}
+
+Estimated Total: ${total}`;
+
+  }
+
+
+  if (service === "signage") {
+
+    const quality =
+      document.getElementById("signageQuality");
+
+    const thickness =
+      document.getElementById("signageThickness");
+
+    const design =
+      document.getElementById("signageDesign");
+
+    details =
+`TintaLab Printed & Laminated Signage Inquiry
+
+Service: Printed & Laminated Signage
+Print Quality: ${quality.options[quality.selectedIndex].text}
+Protection: ${thickness.options[thickness.selectedIndex].text}
+File / Design: ${design.options[design.selectedIndex].text}
+
+Estimated Total: ${total}`;
+
+  }
+
+
+  navigator.clipboard.writeText(details)
     .then(() => {
 
       alert(
