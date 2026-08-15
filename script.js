@@ -513,12 +513,12 @@ const copyPrices = {
 };
 
 function openCopyScanModal() {
-  document.getElementById("copyScanModal").classList.add("active");
+  document.getElementById("copyScanModal").style.display = "block";
   updateCopyScanFields();
 }
 
 function closeCopyScanModal() {
-  document.getElementById("copyScanModal").classList.remove("active");
+  document.getElementById("copyScanModal").style.display = "none";
 }
 
 function getScanFee(pages) {
