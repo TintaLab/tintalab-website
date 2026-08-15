@@ -16,7 +16,8 @@ const SITE_DATA = {
       icon: "document",
       title: "Document Printing",
       text: "Black-and-white and colored printing for school, work, forms, reports, and everyday documents.",
-      tags: ["Short", "A4", "Long"]
+      tags: ["Short", "A4", "Long"],
+      action: "documentPrinting"
     },
     {
       icon: "copy",
