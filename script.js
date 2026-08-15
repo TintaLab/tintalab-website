@@ -246,6 +246,7 @@ const laminationCard = e.target.closest?.('[data-service-action="lamination"]');
 if (photoPrintingCard && (e.key === "Enter" || e.key === " ")) {
   e.preventDefault();
   openPhotoPrintingModal();
+}
 
 if (laminationCard && (e.key === "Enter" || e.key === " ")) {
   e.preventDefault();
