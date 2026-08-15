@@ -195,11 +195,15 @@ const updateSintraTotal = () => {
 document.addEventListener("click", (e) => {
   const sintraCard = e.target.closest('[data-service-action="sintra"]');
   const documentCard = e.target.closest('[data-service-action="documentPrinting"]');
+  const copyScanCard = e.target.closest('[data-service-action="copyScan"]');
 
   if (sintraCard) openSintraModal();
 
   if (documentCard) {
     openDocumentPrinting(e);
+
+    if (copyScanCard) {
+  openCopyScanModal();
   }
 });
 
