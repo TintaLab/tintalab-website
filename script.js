@@ -232,3 +232,240 @@ sintraModal.querySelector('#copySintraOrder').addEventListener('click', async ()
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && sintraModal.classList.contains("open")) closeSintraModal();
 });
+const printingPrices = {
+  text: {
+    bw: {
+      short: 6,
+      a4: 7,
+      long: 8
+    },
+
+    partial: {
+      short: 8,
+      a4: 9,
+      long: 10
+    },
+
+    full: {
+      short: 12,
+      a4: 14,
+      long: 16
+    }
+  },
+
+  image: {
+    bw: {
+      short: 8,
+      a4: 9,
+      long: 10
+    },
+
+    partial: {
+      short: 14,
+      a4: 16,
+      long: 17
+    },
+
+    full: {
+      short: 20,
+      a4: 22,
+      long: 27
+    }
+  }
+};
+
+
+function openDocumentPrinting(event) {
+
+  event.preventDefault();
+
+  document.getElementById("documentPrintingModal").style.display = "block";
+
+  calculatePrinting();
+}
+
+
+function closeDocumentPrinting() {
+
+  document.getElementById("documentPrintingModal").style.display = "none";
+
+}
+
+
+function calculatePrinting() {
+
+  const docType =
+    document.getElementById("docType").value;
+
+  const printType =
+    document.getElementById("printType").value;
+
+  const paperSize =
+    document.getElementById("paperSize").value;
+
+  let quantity =
+    parseInt(document.getElementById("printQty").value);
+
+  const student =
+    document.getElementById("studentDiscount").checked;
+
+
+  if (!quantity || quantity < 1) {
+    quantity = 1;
+  }
+
+
+  const price =
+    printingPrices[docType][printType][paperSize];
+
+
+  const regularTotal =
+    price * quantity;
+
+
+  /* BULK DISCOUNT */
+
+  let bulkDiscount = 0;
+
+  if (quantity >= 100) {
+
+    bulkDiscount = 0.15;
+
+  } else if (quantity >= 50) {
+
+    bulkDiscount = 0.10;
+
+  } else if (quantity >= 20) {
+
+    bulkDiscount = 0.05;
+
+  }
+
+
+  /* STUDENT DISCOUNT */
+
+  const studentDiscount =
+    student ? 0.10 : 0;
+
+
+  /* USE HIGHEST DISCOUNT ONLY */
+
+  const appliedDiscount =
+    Math.max(bulkDiscount, studentDiscount);
+
+
+  const discountAmount =
+    regularTotal * appliedDiscount;
+
+
+  const finalTotal =
+    regularTotal - discountAmount;
+
+
+  document.getElementById("pricePerPage").textContent =
+    "₱" + price.toFixed(2);
+
+
+  document.getElementById("regularTotal").textContent =
+    "₱" + regularTotal.toFixed(2);
+
+
+  document.getElementById("discountAmount").textContent =
+    appliedDiscount > 0
+      ? "-₱" + discountAmount.toFixed(2)
+      : "₱0.00";
+
+
+  document.getElementById("estimatedTotal").textContent =
+    "₱" + finalTotal.toFixed(2);
+
+
+  const message =
+    document.getElementById("discountMessage");
+
+
+  if (bulkDiscount > studentDiscount && bulkDiscount > 0) {
+
+    message.textContent =
+      Math.round(bulkDiscount * 100) +
+      "% Bulk Discount Applied";
+
+  }
+
+  else if (studentDiscount > bulkDiscount) {
+
+    message.textContent =
+      "10% Student Discount Applied";
+
+  }
+
+  else if (
+    studentDiscount === bulkDiscount &&
+    studentDiscount > 0
+  ) {
+
+    message.textContent =
+      Math.round(appliedDiscount * 100) +
+      "% Discount Applied";
+
+  }
+
+  else {
+
+    message.textContent = "";
+
+  }
+
+}
+
+
+/* COPY ORDER + OPEN MESSENGER */
+
+function sendPrintingOrder() {
+
+  const docType =
+    document.getElementById("docType");
+
+  const printType =
+    document.getElementById("printType");
+
+  const paperSize =
+    document.getElementById("paperSize");
+
+  const quantity =
+    document.getElementById("printQty").value;
+
+  const student =
+    document.getElementById("studentDiscount").checked;
+
+  const total =
+    document.getElementById("estimatedTotal").textContent;
+
+
+  const orderDetails =
+`TintaLab Document Printing Inquiry
+
+Document Type: ${docType.options[docType.selectedIndex].text}
+Print Type: ${printType.options[printType.selectedIndex].text}
+Paper Size: ${paperSize.options[paperSize.selectedIndex].text}
+Quantity: ${quantity} page/s
+Student Discount: ${student ? "Yes" : "No"}
+
+Estimated Total: ${total}`;
+
+
+  navigator.clipboard.writeText(orderDetails)
+    .then(() => {
+
+      alert(
+        "Order details copied! Paste it into Messenger."
+      );
+
+      window.open(
+        "https://m.me/61591481322961",
+        "_blank"
+      );
+
+    });
+
+}
