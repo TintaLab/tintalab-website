@@ -469,5 +469,186 @@
 
   </div>
 </div>
+<!-- PHOTO PRINTING MODAL -->
+<div id="photoPrintingModal" class="print-modal">
+  <div class="print-modal-content photo-printing-content">
+
+    <button class="print-close" onclick="closePhotoPrintingModal()">×</button>
+
+    <h2>📸 Photo Printing</h2>
+    <p class="print-subtitle">
+      Premium photo printing with smart A4 sheet optimization.
+    </p>
+
+    <!-- PHOTO SIZE QUANTITIES -->
+    <div class="photo-section">
+      <h3>Choose Your Photo Sizes</h3>
+      <p class="photo-helper">
+        Mix different sizes in one order. We'll arrange them to maximize each A4 sheet.
+      </p>
+
+      <div class="photo-size-grid">
+
+        <div class="photo-size-row">
+          <span><strong>Wallet</strong><small>2 × 3 in</small></span>
+          <input type="number" id="photoWallet" min="0" value="0" oninput="calculatePhotoPrinting()">
+        </div>
+
+        <div class="photo-size-row">
+          <span><strong>2R</strong><small>2.5 × 3.5 in</small></span>
+          <input type="number" id="photo2R" min="0" value="0" oninput="calculatePhotoPrinting()">
+        </div>
+
+        <div class="photo-size-row">
+          <span><strong>3R</strong><small>3.5 × 5 in</small></span>
+          <input type="number" id="photo3R" min="0" value="0" oninput="calculatePhotoPrinting()">
+        </div>
+
+        <div class="photo-size-row">
+          <span><strong>4R</strong><small>4 × 6 in</small></span>
+          <input type="number" id="photo4R" min="0" value="0" oninput="calculatePhotoPrinting()">
+        </div>
+
+        <div class="photo-size-row">
+          <span><strong>5R</strong><small>5 × 7 in</small></span>
+          <input type="number" id="photo5R" min="0" value="0" oninput="calculatePhotoPrinting()">
+        </div>
+
+        <div class="photo-size-row">
+          <span><strong>6R</strong><small>6 × 8 in</small></span>
+          <input type="number" id="photo6R" min="0" value="0" oninput="calculatePhotoPrinting()">
+        </div>
+
+        <div class="photo-size-row">
+          <span><strong>A4</strong><small>Full Sheet</small></span>
+          <input type="number" id="photoA4" min="0" value="0" oninput="calculatePhotoPrinting()">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PHOTOTOP -->
+    <div class="print-field">
+      <label>✨ PhotoTop Protection <span class="recommended-tag">Recommended</span></label>
+
+      <select id="photoTopFinish" onchange="calculatePhotoPrinting()">
+        <option value="none">No PhotoTop</option>
+        <option value="glossy">Glossy</option>
+        <option value="matte">Matte</option>
+        <option value="leather">Leather</option>
+        <option value="canvas">Canvas</option>
+        <option value="glitter">Glitter</option>
+        <option value="3d">3D</option>
+        <option value="holo">Holographic</option>
+      </select>
+
+      <p class="photo-helper">
+        Recommended for added protection against scratches, fingerprints,
+        moisture, and everyday handling.
+      </p>
+    </div>
+
+    <!-- CALCULATOR RESULT -->
+    <div class="print-result">
+
+      <div class="result-row">
+        <span>Photos Selected</span>
+        <strong id="photoTotalPieces">0 pcs</strong>
+      </div>
+
+      <div class="result-row">
+        <span>Estimated A4 Sheets</span>
+        <strong id="photoSheetsUsed">0</strong>
+      </div>
+
+      <div class="result-row">
+        <span>Base Printing</span>
+        <span id="photoBaseTotal">₱0.00</span>
+      </div>
+
+      <div class="result-row">
+        <span>PhotoTop</span>
+        <span id="photoTopTotal">₱0.00</span>
+      </div>
+
+      <div class="result-total">
+        <span>Estimated Total</span>
+        <strong id="photoFinalTotal">₱0.00</strong>
+      </div>
+
+      <p id="photoUtilizationMessage" class="discount-message"></p>
+
+    </div>
+
+    <!-- SMART SHEET INFO -->
+    <div class="bulk-info">
+      <strong>💡 Smart Sheet Pricing</strong>
+      <p>
+        We arrange your selected photo sizes to make the best use of each
+        A4 photo sheet. Different photo sizes may be combined whenever the
+        layout allows.
+      </p>
+      <p>
+        This helps minimize wasted paper and keeps your order as
+        cost-efficient as possible.
+      </p>
+    </div>
+
+    <!-- MATERIALS -->
+    <div class="photo-quality-box">
+      <strong>✨ Quality Materials We Use</strong>
+
+      <p>
+        <b>CUYI RC Satin 200 GSM Photo Paper</b><br>
+        Premium resin-coated satin photo paper for a smooth,
+        professional-looking finish.
+      </p>
+
+      <p>
+        <b>Pigment Ink Printing</b><br>
+        Printed using our Epson pigment-ink printer for quality
+        and improved print durability.
+      </p>
+
+      <p>
+        <b>Optional PhotoTop Protection</b><br>
+        Add your preferred finish while giving your prints an
+        additional protective layer.
+      </p>
+    </div>
+
+    <!-- FILE NOTE -->
+    <div class="price-review-note">
+      <strong>📌 Ready-to-Print File Policy</strong>
+
+      <p>
+        Photos should be submitted ready to print. Basic checking and minor
+        adjustments may be included when needed.
+      </p>
+
+      <p>
+        Photo enhancement, restoration, background removal or replacement,
+        major resizing/recomposition, and other extensive editing may have
+        additional charges depending on the work required.
+      </p>
+
+      <p>
+        Any additional editing fee or price adjustment will be confirmed
+        with you before printing.
+      </p>
+    </div>
+
+    <p class="print-note">
+      Final sheet usage may vary slightly depending on the actual photo
+      dimensions, cropping, spacing, and printable area. Final pricing will
+      be confirmed after file review.
+    </p>
+
+    <button class="messenger-order-btn" onclick="sendPhotoPrintingOrder()">
+      💬 Copy Order Details & Open Messenger
+    </button>
+
+  </div>
+</div>
 </body>
 </html>

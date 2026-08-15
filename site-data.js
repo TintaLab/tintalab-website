@@ -30,7 +30,8 @@ action: "copyScan"
       icon: "photo",
       title: "Photo Printing",
       text: "Photo prints from wallet and cute sizes up to A4, with optional premium PhotoTop finishes.",
-      tags: ["Wallet", "2R–6R", "A4"]
+      tags: ["Wallet", "2R–6R", "A4"],
+action: "photoPrinting"
     },
     {
       icon: "id",

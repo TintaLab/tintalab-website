@@ -196,6 +196,7 @@ document.addEventListener("click", (e) => {
   const sintraCard = e.target.closest('[data-service-action="sintra"]');
   const documentCard = e.target.closest('[data-service-action="documentPrinting"]');
   const copyScanCard = e.target.closest('[data-service-action="copyScan"]');
+const photoPrintingCard = e.target.closest('[data-service-action="photoPrinting"]');
 
   if (sintraCard) {
     openSintraModal();
@@ -207,13 +208,19 @@ document.addEventListener("click", (e) => {
 
   if (copyScanCard) {
     openCopyScanModal();
-  }
+}
+
+if (photoPrintingCard) {
+  openPhotoPrintingModal();
+}
+
 });
 
 document.addEventListener("keydown", (e) => {
   const sintraCard = e.target.closest?.('[data-service-action="sintra"]');
   const documentCard = e.target.closest?.('[data-service-action="documentPrinting"]');
   const copyScanCard = e.target.closest?.('[data-service-action="copyScan"]');
+const photoPrintingCard = e.target.closest?.('[data-service-action="photoPrinting"]');
 
   if (sintraCard && (e.key === "Enter" || e.key === " ")) {
     e.preventDefault();
@@ -229,6 +236,11 @@ document.addEventListener("keydown", (e) => {
     e.preventDefault();
     openCopyScanModal();
   }
+
+if (photoPrintingCard && (e.key === "Enter" || e.key === " ")) {
+  e.preventDefault();
+  openPhotoPrintingModal();
+}
 });
 
 sintraModal.querySelector('.product-modal-close').addEventListener('click', closeSintraModal);
@@ -651,4 +663,494 @@ function calculateCopyScan() {
 
   document.getElementById("copyFinalTotal").textContent =
     `₱${finalTotal.toFixed(2)}`;
+}
+// ========================================
+// PHOTO PRINTING CALCULATOR
+// ========================================
+
+const PHOTO_SHEET_PRICE = 50;
+
+// PhotoTop additional charge PER A4 sheet
+const PHOTO_TOP_PRICES = {
+  none: 0,
+  glossy: 15,
+  matte: 15,
+  leather: 17,
+  canvas: 17,
+  glitter: 20,
+  "3d": 20,
+  holo: 20
+};
+
+// Sizes in millimeters
+const PHOTO_SIZES = {
+  wallet: { w: 50.8, h: 76.2 },   // 2 x 3 in
+  "2r":   { w: 63.5, h: 88.9 },   // 2.5 x 3.5
+  "3r":   { w: 88.9, h: 127 },    // 3.5 x 5
+  "4r":   { w: 101.6, h: 152.4 }, // 4 x 6
+  "5r":   { w: 127, h: 177.8 },   // 5 x 7
+  "6r":   { w: 152.4, h: 203.2 }, // 6 x 8
+  a4:     { w: 210, h: 297 }
+};
+
+// Theoretical A4 working area.
+// For now, assume printer is behaving normally 😂
+const SHEET_WIDTH = 210;
+const SHEET_HEIGHT = 297;
+
+// Small spacing between photos for cutting
+const PHOTO_GAP = 2;
+
+
+// ---------- MODAL ----------
+
+function openPhotoPrintingModal() {
+  document.getElementById("photoPrintingModal")
+    .classList.add("active");
+
+  calculatePhotoPrinting();
+}
+
+function closePhotoPrintingModal() {
+  document.getElementById("photoPrintingModal")
+    .classList.remove("active");
+}
+
+
+// ---------- MAXRECTS PACKER ----------
+
+function rectanglesIntersect(a, b) {
+  return !(
+    b.x >= a.x + a.w ||
+    b.x + b.w <= a.x ||
+    b.y >= a.y + a.h ||
+    b.y + b.h <= a.y
+  );
+}
+
+function containsRect(a, b) {
+  return (
+    b.x >= a.x &&
+    b.y >= a.y &&
+    b.x + b.w <= a.x + a.w &&
+    b.y + b.h <= a.y + a.h
+  );
+}
+
+function splitFreeRect(free, used) {
+  if (!rectanglesIntersect(free, used)) {
+    return [free];
+  }
+
+  const newRects = [];
+
+  // Left
+  if (used.x > free.x) {
+    newRects.push({
+      x: free.x,
+      y: free.y,
+      w: used.x - free.x,
+      h: free.h
+    });
+  }
+
+  // Right
+  if (used.x + used.w < free.x + free.w) {
+    newRects.push({
+      x: used.x + used.w,
+      y: free.y,
+      w: free.x + free.w - (used.x + used.w),
+      h: free.h
+    });
+  }
+
+  // Top
+  if (used.y > free.y) {
+    newRects.push({
+      x: free.x,
+      y: free.y,
+      w: free.w,
+      h: used.y - free.y
+    });
+  }
+
+  // Bottom
+  if (used.y + used.h < free.y + free.h) {
+    newRects.push({
+      x: free.x,
+      y: used.y + used.h,
+      w: free.w,
+      h: free.y + free.h - (used.y + used.h)
+    });
+  }
+
+  return newRects.filter(r => r.w > 0 && r.h > 0);
+}
+
+function pruneFreeRects(rects) {
+  return rects.filter((rect, i) => {
+    return !rects.some((other, j) => {
+      return i !== j && containsRect(other, rect);
+    });
+  });
+}
+
+function findBestPosition(freeRects, photo) {
+  let best = null;
+
+  for (const free of freeRects) {
+    const orientations = [
+      { w: photo.w, h: photo.h, rotated: false },
+      { w: photo.h, h: photo.w, rotated: true }
+    ];
+
+    for (const option of orientations) {
+      if (option.w <= free.w && option.h <= free.h) {
+
+        const leftoverX = free.w - option.w;
+        const leftoverY = free.h - option.h;
+
+        const shortSide = Math.min(leftoverX, leftoverY);
+        const longSide = Math.max(leftoverX, leftoverY);
+
+        if (
+          !best ||
+          shortSide < best.shortSide ||
+          (
+            shortSide === best.shortSide &&
+            longSide < best.longSide
+          )
+        ) {
+          best = {
+            x: free.x,
+            y: free.y,
+            w: option.w,
+            h: option.h,
+            rotated: option.rotated,
+            shortSide,
+            longSide
+          };
+        }
+      }
+    }
+  }
+
+  return best;
+}
+
+function packOneSheet(items) {
+  let freeRects = [
+    {
+      x: 0,
+      y: 0,
+      w: SHEET_WIDTH,
+      h: SHEET_HEIGHT
+    }
+  ];
+
+  const placed = [];
+  const remaining = [];
+
+  for (const item of items) {
+
+    const paddedItem = {
+      ...item,
+      w: item.w + PHOTO_GAP,
+      h: item.h + PHOTO_GAP
+    };
+
+    const position = findBestPosition(
+      freeRects,
+      paddedItem
+    );
+
+    if (!position) {
+      remaining.push(item);
+      continue;
+    }
+
+    const usedRect = {
+      x: position.x,
+      y: position.y,
+      w: position.w,
+      h: position.h
+    };
+
+    placed.push({
+      ...item,
+      x: position.x,
+      y: position.y,
+      rotated: position.rotated
+    });
+
+    let newFreeRects = [];
+
+    for (const free of freeRects) {
+      newFreeRects.push(
+        ...splitFreeRect(free, usedRect)
+      );
+    }
+
+    freeRects = pruneFreeRects(newFreeRects);
+  }
+
+  return {
+    placed,
+    remaining
+  };
+}
+
+
+// ---------- ORDER BUILDER ----------
+
+function buildPhotoItems() {
+
+  const inputs = [
+    ["wallet", "photoWallet"],
+    ["2r", "photo2R"],
+    ["3r", "photo3R"],
+    ["4r", "photo4R"],
+    ["5r", "photo5R"],
+    ["6r", "photo6R"],
+    ["a4", "photoA4"]
+  ];
+
+  const items = [];
+
+  for (const [sizeName, inputId] of inputs) {
+
+    const quantity = Math.max(
+      0,
+      Number(
+        document.getElementById(inputId).value
+      ) || 0
+    );
+
+    const size = PHOTO_SIZES[sizeName];
+
+    for (let i = 0; i < quantity; i++) {
+
+      items.push({
+        type: sizeName,
+        w: size.w,
+        h: size.h,
+        area: size.w * size.h
+      });
+
+    }
+  }
+
+  // Largest photos first = generally better packing
+  items.sort((a, b) => b.area - a.area);
+
+  return items;
+}
+
+
+// ---------- PACK MULTIPLE SHEETS ----------
+
+function calculateRequiredSheets(items) {
+
+  if (items.length === 0) {
+    return {
+      sheets: 0,
+      totalArea: 0
+    };
+  }
+
+  let remaining = [...items];
+  let sheetCount = 0;
+
+  while (remaining.length > 0) {
+
+    const result = packOneSheet(remaining);
+
+    // Safety check
+    if (result.placed.length === 0) {
+      sheetCount += remaining.length;
+      break;
+    }
+
+    sheetCount++;
+    remaining = result.remaining;
+  }
+
+  const totalArea = items.reduce(
+    (sum, item) => sum + item.area,
+    0
+  );
+
+  return {
+    sheets: sheetCount,
+    totalArea
+  };
+}
+
+
+// ---------- MAIN CALCULATOR ----------
+
+function calculatePhotoPrinting() {
+
+  const items = buildPhotoItems();
+
+  const totalPieces = items.length;
+
+  const packing = calculateRequiredSheets(items);
+
+  const sheets = packing.sheets;
+
+  const photoTop =
+    document.getElementById("photoTopFinish").value;
+
+  const photoTopPerSheet =
+    PHOTO_TOP_PRICES[photoTop];
+
+  const baseTotal =
+    sheets * PHOTO_SHEET_PRICE;
+
+  const photoTopTotal =
+    sheets * photoTopPerSheet;
+
+  const finalTotal =
+    baseTotal + photoTopTotal;
+
+
+  document.getElementById(
+    "photoTotalPieces"
+  ).textContent =
+    `${totalPieces} pcs`;
+
+
+  document.getElementById(
+    "photoSheetsUsed"
+  ).textContent =
+    sheets;
+
+
+  document.getElementById(
+    "photoBaseTotal"
+  ).textContent =
+    `₱${baseTotal.toFixed(2)}`;
+
+
+  document.getElementById(
+    "photoTopTotal"
+  ).textContent =
+    `₱${photoTopTotal.toFixed(2)}`;
+
+
+  document.getElementById(
+    "photoFinalTotal"
+  ).textContent =
+    `₱${finalTotal.toFixed(2)}`;
+
+
+  // -------- UTILIZATION MESSAGE --------
+
+  const message =
+    document.getElementById(
+      "photoUtilizationMessage"
+    );
+
+
+  if (sheets === 0) {
+
+    message.textContent =
+      "Choose your photo sizes to calculate your order.";
+
+    return;
+  }
+
+
+  const totalSheetArea =
+    sheets * SHEET_WIDTH * SHEET_HEIGHT;
+
+  const utilization =
+    packing.totalArea / totalSheetArea;
+
+  const utilizationPercent =
+    Math.round(utilization * 100);
+
+
+  if (utilization < 0.65) {
+
+    message.textContent =
+      `💡 About ${utilizationPercent}% of your estimated sheet area is being used. You may still be able to add more photos and maximize your order.`;
+
+  }
+
+  else if (utilization < 0.85) {
+
+    message.textContent =
+      `👍 Estimated sheet utilization: ${utilizationPercent}%. There may still be room for additional smaller photos.`;
+
+  }
+
+  else {
+
+    message.textContent =
+      `✨ Estimated sheet utilization: ${utilizationPercent}%. Nice — you're making good use of your photo sheets!`;
+
+  }
+}
+
+
+// ---------- MESSENGER ORDER ----------
+
+function sendPhotoPrintingOrder() {
+
+  const quantities = {
+    Wallet: document.getElementById("photoWallet").value,
+    "2R": document.getElementById("photo2R").value,
+    "3R": document.getElementById("photo3R").value,
+    "4R": document.getElementById("photo4R").value,
+    "5R": document.getElementById("photo5R").value,
+    "6R": document.getElementById("photo6R").value,
+    A4: document.getElementById("photoA4").value
+  };
+
+  const selectedPhotos = Object.entries(quantities)
+    .filter(([_, qty]) => Number(qty) > 0)
+    .map(([size, qty]) => `${size}: ${qty} pc/s`)
+    .join("\n");
+
+  const finish =
+    document.getElementById("photoTopFinish");
+
+  const sheets =
+    document.getElementById("photoSheetsUsed")
+      .textContent;
+
+  const total =
+    document.getElementById("photoFinalTotal")
+      .textContent;
+
+
+  const orderDetails =
+`TintaLab Photo Printing Inquiry
+
+${selectedPhotos || "No photos selected"}
+
+Estimated A4 Sheets: ${sheets}
+
+PhotoTop: ${finish.options[finish.selectedIndex].text}
+
+Estimated Total: ${total}
+
+Files will be submitted ready to print. I understand that extensive editing may have additional charges.`;
+
+
+  navigator.clipboard.writeText(orderDetails)
+    .then(() => {
+
+      alert(
+        "Order details copied! Paste them into Messenger."
+      );
+
+      window.open(
+        "https://m.me/61591481322961",
+        "_blank"
+      );
+
+    });
 }
