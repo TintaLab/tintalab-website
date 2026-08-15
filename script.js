@@ -198,6 +198,7 @@ document.addEventListener("click", (e) => {
   const copyScanCard = e.target.closest('[data-service-action="copyScan"]');
 const photoPrintingCard = e.target.closest('[data-service-action="photoPrinting"]');
 const laminationCard = e.target.closest('[data-service-action="lamination"]');
+const bagTagsCard = e.target.closest('[data-service-action="bagTags"]');
 
   if (sintraCard) {
     openSintraModal();
@@ -219,6 +220,10 @@ if (laminationCard) {
   openLaminationModal();
 }
 
+if (bagTagsCard) {
+  openBagTagsModal();
+}
+
 });
 
 document.addEventListener("keydown", (e) => {
@@ -227,6 +232,7 @@ document.addEventListener("keydown", (e) => {
   const copyScanCard = e.target.closest?.('[data-service-action="copyScan"]');
 const photoPrintingCard = e.target.closest?.('[data-service-action="photoPrinting"]');
 const laminationCard = e.target.closest?.('[data-service-action="lamination"]');
+const bagTagsCard = e.target.closest?.('[data-service-action="bagTags"]');
 
   if (sintraCard && (e.key === "Enter" || e.key === " ")) {
     e.preventDefault();
@@ -253,6 +259,12 @@ if (laminationCard && (e.key === "Enter" || e.key === " ")) {
   openLaminationModal();
 
 }
+
+if (bagTagsCard && (e.key === "Enter" || e.key === " ")) {
+  e.preventDefault();
+  openBagTagsModal();
+}
+
 });
 
 sintraModal.querySelector('.product-modal-close').addEventListener('click', closeSintraModal);
@@ -1435,4 +1447,301 @@ Estimated Total: ${total}`;
       );
 
     });
+}
+// ========================================
+// ID SIZE BAG TAGS CALCULATOR
+// ========================================
+
+const BAG_TAG_PRICES = {
+  regular: {
+    qty: 1,
+    total: 35
+  },
+
+  studentBundle: {
+    qty: 3,
+    total: 100
+  },
+
+  bundle10: {
+    qty: 10,
+    total: 300
+  },
+
+  reseller: {
+    qty: 10,
+    total: 250
+  },
+
+  custom: {
+    qty: 10,
+    total: 300
+  }
+};
+
+
+// ---------- MODAL ----------
+
+function openBagTagsModal() {
+  document.getElementById("bagTagsModal")
+    .classList.add("active");
+
+  updateBagTagFields();
+}
+
+function closeBagTagsModal() {
+  document.getElementById("bagTagsModal")
+    .classList.remove("active");
+}
+
+
+// ---------- FIELD LOGIC ----------
+
+function updateBagTagFields() {
+
+  const orderType =
+    document.getElementById("bagTagOrderType").value;
+
+  const quantityField =
+    document.getElementById("bagTagQuantityField");
+
+  const quantityInput =
+    document.getElementById("bagTagQuantity");
+
+  const designInfo =
+    document.getElementById("bagTagAvailableDesignInfo");
+
+  const customInfo =
+    document.getElementById("bagTagCustomInfo");
+
+  const resellerInfo =
+    document.getElementById("bagTagResellerInfo");
+
+
+  // Regular order allows custom quantity
+  if (orderType === "regular") {
+
+    quantityField.style.display = "";
+    quantityInput.disabled = false;
+
+    if (Number(quantityInput.value) < 1) {
+      quantityInput.value = 1;
+    }
+
+  } else {
+
+    quantityField.style.display = "none";
+    quantityInput.disabled = true;
+
+  }
+
+
+  // Available designs
+  designInfo.style.display =
+    orderType === "custom" ? "none" : "";
+
+
+  // Custom image instructions
+  customInfo.style.display =
+    orderType === "custom" ? "" : "none";
+
+
+  // Reseller instructions
+  resellerInfo.style.display =
+    orderType === "reseller" ? "" : "none";
+
+
+  calculateBagTags();
+}
+
+
+// ---------- CALCULATOR ----------
+
+function calculateBagTags() {
+
+  const orderType =
+    document.getElementById("bagTagOrderType").value;
+
+  const attachment =
+    document.getElementById("bagTagAttachment");
+
+  let quantity = 1;
+  let total = 35;
+  let regularEquivalent = 35;
+
+
+  if (orderType === "regular") {
+
+    quantity = Math.max(
+      1,
+      Number(
+        document.getElementById("bagTagQuantity").value
+      ) || 1
+    );
+
+    total = quantity * 35;
+
+    regularEquivalent = total;
+
+  } else {
+
+    quantity =
+      BAG_TAG_PRICES[orderType].qty;
+
+    total =
+      BAG_TAG_PRICES[orderType].total;
+
+    regularEquivalent =
+      quantity * 35;
+
+  }
+
+
+  const savings =
+    Math.max(
+      0,
+      regularEquivalent - total
+    );
+
+
+  // DISPLAY QUANTITY
+
+  document.getElementById(
+    "bagTagPieces"
+  ).textContent =
+    `${quantity} pc${quantity > 1 ? "s" : ""}`;
+
+
+  // DISPLAY ATTACHMENT
+
+  document.getElementById(
+    "bagTagAttachmentDisplay"
+  ).textContent =
+    attachment.options[
+      attachment.selectedIndex
+    ].text;
+
+
+  // SAVINGS
+
+  const savingsRow =
+    document.getElementById(
+      "bagTagSavingsRow"
+    );
+
+  if (savings > 0) {
+
+    savingsRow.style.display = "";
+
+    document.getElementById(
+      "bagTagSavings"
+    ).textContent =
+      `₱${savings.toFixed(2)}`;
+
+  } else {
+
+    savingsRow.style.display = "none";
+
+  }
+
+
+  // TOTAL
+
+  document.getElementById(
+    "bagTagFinalTotal"
+  ).textContent =
+    `₱${total.toFixed(2)}`;
+
+
+  // MESSAGE
+
+  const message =
+    document.getElementById(
+      "bagTagPriceMessage"
+    );
+
+
+  if (orderType === "studentBundle") {
+
+    message.textContent =
+      "🎓 Student Bundle: 3 personalized bag tags for ₱100.";
+
+  }
+
+  else if (orderType === "bundle10") {
+
+    message.textContent =
+      "✨ 10-piece bundle saves you ₱50 compared with regular pricing.";
+
+  }
+
+  else if (orderType === "reseller") {
+
+    message.textContent =
+      "💼 Reseller cost: ₱25 per tag. Potential profit: up to ₱100 when sold at ₱35 each.";
+
+  }
+
+  else if (orderType === "custom") {
+
+    message.textContent =
+      "🖼️ Custom image batch: minimum 10 tags. Different images may be submitted.";
+
+  }
+
+  else {
+
+    message.textContent =
+      "Regular price: ₱35 per personalized bag tag.";
+
+  }
+
+}
+
+
+// ---------- MESSENGER ORDER ----------
+
+function sendBagTagOrder() {
+
+  const orderType =
+    document.getElementById("bagTagOrderType");
+
+  const attachment =
+    document.getElementById("bagTagAttachment");
+
+  const pieces =
+    document.getElementById("bagTagPieces")
+      .textContent;
+
+  const total =
+    document.getElementById("bagTagFinalTotal")
+      .textContent;
+
+
+  const details =
+`TintaLab ID-Size Bag Tag Inquiry
+
+Order: ${orderType.options[orderType.selectedIndex].text}
+Quantity: ${pieces}
+Attachment: ${attachment.options[attachment.selectedIndex].text}
+
+Estimated Total: ${total}
+
+I will send my selected design/theme or custom images through Messenger.`;
+
+
+  navigator.clipboard.writeText(details)
+    .then(() => {
+
+      alert(
+        "Order details copied! Paste them into Messenger."
+      );
+
+      window.open(
+        "https://m.me/61591481322961",
+        "_blank"
+      );
+
+    });
+
 }

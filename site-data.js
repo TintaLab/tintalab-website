@@ -54,16 +54,17 @@ action: "photoPrinting"
     },
     {
       icon: "laminate",
-      title: "Lamination",
+      title: "Lamination & Basic Printed Signages",
       text: "Protection for IDs, documents, photos, certificates, and frequently handled materials.",
       tags: ["ID", "A5", "A4"],
 action: "lamination"
     },
     {
       icon: "sticker",
-      title: "Sticker Printing",
-      text: "Glossy and matte sticker options for labels, school names, small-business packaging, and crafts.",
-      tags: ["Glossy", "Matte", "Labels"]
+      title: "ID Size Bag Tags",
+      text: "Personalized ID-size bag tags for school bags, gifts, souvenirs, and everyday use.",
+  tags: ["ID Size", "Personalized", "Water-resistant"],
+action: "bagTags"
     }
   ],
   sintraConfigurator: {

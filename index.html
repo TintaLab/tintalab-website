@@ -873,5 +873,202 @@
 
   </div>
 </div>
+<!-- ID SIZE BAG TAGS MODAL -->
+<div id="bagTagsModal" class="print-modal">
+  <div class="print-modal-content">
+
+    <button class="print-close" onclick="closeBagTagsModal()">×</button>
+
+    <h2>🎒 Personalized ID-Size Bag Tags</h2>
+
+    <p class="print-subtitle">
+      Cute, personalized bag tags with your choice of attachment.
+      Perfect for school bags, gifts, collections, and more.
+    </p>
+
+    <!-- ORDER TYPE -->
+    <div class="print-field">
+      <label>Choose Your Order</label>
+
+      <select id="bagTagOrderType" onchange="updateBagTagFields()">
+        <option value="regular">Regular — ₱35 each</option>
+        <option value="studentBundle">Student Bundle — 3 for ₱100</option>
+        <option value="bundle10">10-pc Bundle — ₱300</option>
+        <option value="reseller">Student Reseller Pack — 10 pcs for ₱250</option>
+        <option value="custom">Custom Image Batch — 10 pcs for ₱300</option>
+      </select>
+    </div>
+
+    <!-- REGULAR QUANTITY -->
+    <div class="print-field" id="bagTagQuantityField">
+      <label>Quantity</label>
+
+      <input
+        type="number"
+        id="bagTagQuantity"
+        min="1"
+        value="1"
+        oninput="calculateBagTags()"
+      >
+    </div>
+
+    <!-- ATTACHMENT -->
+    <div class="print-field">
+      <label>Choose Your Attachment</label>
+
+      <select id="bagTagAttachment" onchange="calculateBagTags()">
+        <option value="keyring">Silver-Plated Keyring</option>
+        <option value="chain">Metal Beaded Chain</option>
+        <option value="strap">Bag Tag Strap</option>
+      </select>
+
+      <p class="photo-helper">
+        Your choice of one attachment per bag tag is already included
+        in the price.
+      </p>
+    </div>
+
+    <!-- AVAILABLE DESIGN INFO -->
+    <div id="bagTagAvailableDesignInfo" class="bulk-info">
+      <strong>🎨 Choose From Our Available Designs</strong>
+
+      <p>
+        Select from our available TintaLab bag tag designs.
+        Available themes and designs may change as we add new collections.
+      </p>
+
+      <p>
+        Send us your selected design, character, artist, player,
+        or theme through Messenger when placing your order.
+      </p>
+    </div>
+
+    <!-- CUSTOM IMAGE INFO -->
+    <div id="bagTagCustomInfo" class="price-review-note" style="display:none;">
+      <strong>🖼️ Send Your Own Images</strong>
+
+      <p>
+        Custom image orders require a minimum of
+        <strong>10 bag tags</strong>.
+        Different images may be submitted for each tag.
+      </p>
+
+      <p>
+        Basic cropping, resizing, and print preparation are included.
+        Please send clear, high-resolution images whenever possible.
+      </p>
+
+      <p>
+        Images requiring significant enhancement, background editing,
+        restoration, or additional design work may have an extra editing
+        charge after file review.
+      </p>
+    </div>
+
+    <!-- RESELLER INFO -->
+    <div id="bagTagResellerInfo" class="bagtag-reseller-box" style="display:none;">
+      <strong>💼 Student Reseller Pack</strong>
+
+      <p>
+        Get 10 bag tags for <strong>₱250</strong>
+        — only ₱25 per tag.
+      </p>
+
+      <p>
+        Sell them at our regular ₱35 price and you can earn up to
+        <strong>₱100 potential profit per 10-tag batch.</strong>
+      </p>
+
+      <p>
+        Tip: Collect orders from classmates and friends first,
+        then send us their selected designs in one batch.
+      </p>
+    </div>
+
+    <!-- PRICE -->
+    <div class="print-result">
+
+      <div class="result-row">
+        <span>Bag Tags</span>
+        <strong id="bagTagPieces">1 pc</strong>
+      </div>
+
+      <div class="result-row">
+        <span>Attachment</span>
+        <span id="bagTagAttachmentDisplay">Keyring</span>
+      </div>
+
+      <div class="result-row" id="bagTagSavingsRow" style="display:none;">
+        <span>You Save</span>
+        <strong id="bagTagSavings">₱0.00</strong>
+      </div>
+
+      <div class="result-total">
+        <span>Estimated Total</span>
+        <strong id="bagTagFinalTotal">₱35.00</strong>
+      </div>
+
+      <p id="bagTagPriceMessage" class="discount-message"></p>
+
+    </div>
+
+    <!-- PRODUCT INFO -->
+    <div class="photo-quality-box">
+      <strong>✨ What's Included?</strong>
+
+      <p>
+        <b>ID-Size Personalized Bag Tag</b><br>
+        Full-color printed tag with protective PET finish.
+      </p>
+
+      <p>
+        <b>Pigment Ink Printing</b><br>
+        Used for quality and improved print durability.
+      </p>
+
+      <p>
+        <b>Attachment of Your Choice</b><br>
+        Choose a keyring, metal beaded chain, or bag tag strap
+        at no additional charge.
+      </p>
+    </div>
+
+    <!-- STUDENT NOTE -->
+    <div class="bulk-info">
+      <strong>🎓 Student-Friendly Pricing</strong>
+
+      <p>
+        Regular price is <strong>₱35 each</strong>,
+        or get <strong>3 for ₱100</strong>.
+      </p>
+
+      <p>
+        Want to earn at school?
+        Ask about our <strong>Student Reseller Pack</strong>
+        and collect orders from your classmates and friends.
+      </p>
+    </div>
+
+    <!-- FINAL NOTE -->
+    <div class="price-review-note">
+      <strong>📌 Order Note</strong>
+
+      <p>
+        Design availability is subject to our current collection.
+        For custom-image orders, please send your files through Messenger.
+      </p>
+
+      <p>
+        Final output may vary slightly depending on image quality,
+        cropping, and the submitted design.
+      </p>
+    </div>
+
+    <button class="messenger-order-btn" onclick="sendBagTagOrder()">
+      💬 Copy Order Details & Open Messenger
+    </button>
+
+  </div>
+</div>
 </body>
 </html>

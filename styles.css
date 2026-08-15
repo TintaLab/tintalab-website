@@ -643,3 +643,40 @@ body.modal-open{overflow:hidden}
   margin-bottom: 18px;
 }
 }
+/* ========================================
+   ID SIZE BAG TAGS
+======================================== */
+
+.bagtag-reseller-box {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 14px;
+  background: #eef7ff;
+  border: 1px solid #b9d8f3;
+}
+
+.bagtag-reseller-box strong {
+  display: block;
+  color: #123b66;
+  margin-bottom: 8px;
+}
+
+.bagtag-reseller-box p {
+  margin: 7px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #555;
+}
+
+#bagTagQuantity {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d7d7d7;
+  border-radius: 10px;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+#bagTagSavings {
+  color: #138a45;
+}
