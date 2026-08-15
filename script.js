@@ -193,18 +193,30 @@ const updateSintraTotal = () => {
 };
 
 document.addEventListener("click", (e) => {
-  const card = e.target.closest('[data-service-action="sintra"]');
-  if (card) openSintraModal();
-});
+  const sintraCard = e.target.closest('[data-service-action="sintra"]');
+  const documentCard = e.target.closest('[data-service-action="documentPrinting"]');
 
-document.addEventListener("keydown", (e) => {
-  const card = e.target.closest?.('[data-service-action="sintra"]');
-  if (card && (e.key === "Enter" || e.key === " ")) {
-    e.preventDefault();
-    openSintraModal();
+  if (sintraCard) openSintraModal();
+
+  if (documentCard) {
+    openDocumentPrinting(e);
   }
 });
 
+document.addEventListener("keydown", (e) => {
+  const sintraCard = e.target.closest?.('[data-service-action="sintra"]');
+  const documentCard = e.target.closest?.('[data-service-action="documentPrinting"]');
+
+  if (sintraCard && (e.key === "Enter" || e.key === " ")) {
+    e.preventDefault();
+    openSintraModal();
+  }
+
+  if (documentCard && (e.key === "Enter" || e.key === " ")) {
+    e.preventDefault();
+    openDocumentPrinting(e);
+  }
+});
 sintraModal.querySelector('.product-modal-close').addEventListener('click', closeSintraModal);
 sintraModal.addEventListener('click', (e) => {
   if (e.target === sintraModal) closeSintraModal();
