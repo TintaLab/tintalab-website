@@ -197,6 +197,19 @@ document.addEventListener("click", (e) => {
   const documentCard = e.target.closest('[data-service-action="documentPrinting"]');
   const copyScanCard = e.target.closest('[data-service-action="copyScan"]');
 
+  if (sintraCard) {
+    openSintraModal();
+  }
+
+  if (documentCard) {
+    openDocumentPrinting(e);
+  }
+
+  if (copyScanCard) {
+    openCopyScanModal();
+  }
+});
+
 document.addEventListener("keydown", (e) => {
   const sintraCard = e.target.closest?.('[data-service-action="sintra"]');
   const documentCard = e.target.closest?.('[data-service-action="documentPrinting"]');
@@ -214,10 +227,6 @@ document.addEventListener("keydown", (e) => {
 
   if (copyScanCard && (e.key === "Enter" || e.key === " ")) {
     e.preventDefault();
-    openCopyScanModal();
-  }
-
-  if (copyScanCard) {
     openCopyScanModal();
   }
 });
