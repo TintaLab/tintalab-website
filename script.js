@@ -231,14 +231,6 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-document.addEventListener("keydown", (e) => {
-  const card = e.target.closest?.('[data-service-action="sintra"]');
-  if (card && (e.key === "Enter" || e.key === " ")) {
-    e.preventDefault();
-    openSintraModal();
-  }
-});
-
 sintraModal.querySelector('.product-modal-close').addEventListener('click', closeSintraModal);
 sintraModal.addEventListener('click', (e) => {
   if (e.target === sintraModal) closeSintraModal();
