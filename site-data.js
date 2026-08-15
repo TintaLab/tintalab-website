@@ -16,14 +16,14 @@ const SITE_DATA = {
       icon: "document",
       title: "Document Printing",
       text: "Black-and-white and colored printing for school, work, forms, reports, and everyday documents.",
-      tags: ["Short", "A4", "Long"],
-      action: "documentPrinting"
+      tags: ["Short", "A4", "Long"]
     },
     {
       icon: "copy",
       title: "Photocopy & Scanning",
       text: "Clean photocopies plus scanning to PDF or JPEG for easy online submission and safekeeping.",
-      tags: ["B&W", "Colored", "PDF/JPEG"]
+      tags: ["B&W", "Colored", "PDF/JPEG"],
+action: "copyScan"
     },
     {
       icon: "photo",
