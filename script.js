@@ -577,6 +577,12 @@ function updateCopyScanFields() {
   const quantityField = document.getElementById("copyQuantityField");
   const bulkInfo = document.getElementById("copyBulkInfo");
 
+const backToBackField =
+  document.getElementById("copyBackToBackField");
+
+const backToBack =
+  document.getElementById("copyBackToBack");
+
   if (service === "photocopy") {
     printOptions.style.display = "";
     scanPagesField.style.display = "none";
@@ -584,6 +590,7 @@ function updateCopyScanFields() {
     bulkInfo.style.display = "";
     document.getElementById("copyQuantityLabel").textContent =
       "Quantity / Pages";
+backToBackField.style.display = "";
   }
 
   if (service === "scan") {
@@ -591,6 +598,8 @@ function updateCopyScanFields() {
     scanPagesField.style.display = "";
     quantityField.style.display = "none";
     bulkInfo.style.display = "none";
+backToBackField.style.display = "none";
+backToBack.checked = false;
   }
 
   if (service === "scanprint") {
@@ -600,6 +609,8 @@ function updateCopyScanFields() {
     bulkInfo.style.display = "";
     document.getElementById("copyQuantityLabel").textContent =
       "Number of Printed Copies";
+backToBackField.style.display = "none";
+backToBack.checked = false;
   }
 
   calculateCopyScan();
@@ -621,6 +632,8 @@ function calculateCopyScan() {
     1,
     Number(document.getElementById("scanPages").value) || 1
   );
+const backToBack =
+  document.getElementById("copyBackToBack")?.checked || false;
 
   let rate = 0;
   let regularTotal = 0;
@@ -647,10 +660,17 @@ function calculateCopyScan() {
   } else {
     rate = copyPrices[content][color][paper];
 
-    const printTotal = rate * quantity;
-    const discountRate = getBulkDiscount(quantity);
-    discountAmount = printTotal * discountRate;
-    const discountedPrintTotal = printTotal - discountAmount;
+    let effectiveRate = rate;
+
+if (service === "photocopy" && backToBack) {
+  const backSideRate = Math.max(0, rate - 2);
+  effectiveRate = rate + backSideRate;
+}
+
+const printTotal = effectiveRate * quantity;
+const discountRate = getBulkDiscount(quantity);
+discountAmount = printTotal * discountRate;
+const discountedPrintTotal = printTotal - discountAmount;
 
     regularTotal = printTotal;
     finalTotal = discountedPrintTotal;
@@ -662,7 +682,11 @@ function calculateCopyScan() {
 
       rateLabel.textContent = "Print price per page";
     } else {
-      rateLabel.textContent = "Price per page";
+      if (service === "photocopy" && backToBack) {
+  rateLabel.textContent = "Price per back-to-back sheet";
+} else {
+  rateLabel.textContent = "Price per page";
+}
     }
 
     discountRow.style.display = "";
@@ -676,8 +700,13 @@ function calculateCopyScan() {
     }
   }
 
-  document.getElementById("copyRate").textContent =
-    `₱${rate.toFixed(2)}`;
+  const displayedRate =
+  service === "photocopy" && backToBack
+    ? rate + Math.max(0, rate - 2)
+    : rate;
+
+document.getElementById("copyRate").textContent =
+  `₱${displayedRate.toFixed(2)}`;
 
   document.getElementById("copyRegularTotal").textContent =
     `₱${regularTotal.toFixed(2)}`;
