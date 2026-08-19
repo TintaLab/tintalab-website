@@ -504,7 +504,45 @@
       <p class="photo-helper">
         Mix different sizes in one order. We'll arrange them to maximize each A4 sheet.
       </p>
+<!-- PHOTO ORDER TYPE -->
+<div class="print-field">
+  <label>Order Type</label>
 
+  <select id="photoOrderType" onchange="updatePhotoOrderType()">
+    <option value="piece">Per Piece / Small Order</option>
+    <option value="layout">Mixed Sizes / A4 Layout</option>
+  </select>
+
+  <p class="photo-helper" id="photoOrderTypeHelp">
+    Best for a few prints of one specific photo size.
+  </p>
+</div>
+<!-- PER PIECE PHOTO OPTIONS -->
+<div id="photoPerPieceOptions">
+  <div class="print-field">
+    <label>Photo Size</label>
+
+    <select id="photoPieceSize" onchange="calculatePhotoPrinting()">
+      <option value="cute">Cute Size — ₱10 each</option>
+      <option value="wallet">Wallet / 2R — ₱10 each</option>
+      <option value="3r">3R — ₱15 each</option>
+      <option value="4r">4R — ₱20 each</option>
+      <option value="5r">5R — ₱30 each</option>
+      <option value="a4">A4 — ₱50 each</option>
+    </select>
+  </div>
+
+  <div class="print-field">
+    <label>Quantity</label>
+    <input
+      type="number"
+      id="photoPieceQuantity"
+      min="1"
+      value="1"
+      oninput="calculatePhotoPrinting()"
+    >
+  </div>
+</div>
       <div class="photo-size-grid">
 
         <div class="photo-size-row">
@@ -559,6 +597,25 @@
         <option value="3d">3D</option>
         <option value="holo">Holographic</option>
       </select>
+<div id="photoTopPreview" class="phototop-preview" style="display:none;">
+  <p class="phototop-preview-title">
+    Preview: <strong id="photoTopPreviewName"></strong>
+  </p>
+
+  <img
+    id="photoTopPreviewImage"
+    src=""
+    alt="PhotoTop finish preview"
+  >
+
+  <p class="photo-helper">
+    Sample only. Actual appearance may vary depending on lighting and printed image.
+  </p>
+
+  <a href="#finishes" class="phototop-view-all" onclick="closePhotoPrintingModal()">
+    View all PhotoTop samples →
+  </a>
+</div>
 
       <p class="photo-helper">
         Recommended for added protection against scratches, fingerprints,
@@ -575,7 +632,7 @@
       </div>
 
       <div class="result-row">
-        <span>Estimated A4 Sheets</span>
+        <span id="photoUsageLabel">Estimated A4 Sheets</span>
         <strong id="photoSheetsUsed">0</strong>
       </div>
 
@@ -697,12 +754,13 @@
         <label>Size</label>
         <select id="laminationSize" onchange="updateLaminationFields()">
           <option value="id">ID Size</option>
-          <option value="wallet">Wallet / 2R</option>
-          <option value="3r">3R</option>
-          <option value="4r">4R</option>
-          <option value="5r">5R</option>
-          <option value="a5">A5</option>
-          <option value="a4">A4</option>
+<option value="cute">Cute Size</option>
+<option value="wallet">Wallet / 2R</option>
+<option value="3r">3R</option>
+<option value="4r">4R</option>
+<option value="5r">5R</option>
+<option value="a5">A5</option>
+<option value="a4">A4</option>
         </select>
       </div>
 
@@ -732,13 +790,13 @@
         </div>
       </div>
 
-      <div id="idLaminationNote" class="bulk-info">
-        <strong>🪪 ID Lamination</strong>
-        <p>
-          ID-size lamination currently uses our pre-cut Standard 125-micron pouch
-          for a clean and consistent finish.
-        </p>
-      </div>
+     <div id="idLaminationNote" class="bulk-info">
+  <strong>🪪 ID & Cute Size Lamination</strong>
+  <p>
+    ID and Cute Size currently use our pre-cut Standard 125-micron pouches
+    for a clean and consistent finish.
+  </p>
+</div>
 
     </div>
 
@@ -909,13 +967,24 @@
       <label>Choose Your Order</label>
 
       <select id="bagTagOrderType" onchange="updateBagTagFields()">
-        <option value="regular">Regular — ₱35 each</option>
-        <option value="studentBundle">Student Bundle — 3 for ₱100</option>
-        <option value="bundle10">10-pc Bundle — ₱300</option>
-        <option value="reseller">Student Reseller Pack — 10 pcs for ₱250</option>
-        <option value="custom">Custom Image Batch — 10 pcs for ₱300</option>
-      </select>
-    </div>
+  <option value="regular">Regular Order</option>
+  <option value="custom">Custom Image Batch — minimum 10 pcs</option>
+</select>
+<div class="print-field" id="bagTagStudentResellerField">
+  <label class="checkbox-option">
+    <input
+      type="checkbox"
+      id="bagTagStudentReseller"
+      onchange="updateBagTagFields()"
+    >
+    <span>Student Reseller</span>
+  </label>
+
+  <p class="photo-helper">
+    Student reseller pricing unlocks 10 bag tags for ₱250.
+    This option is intended for students collecting and reselling orders at school.
+  </p>
+</div>
 
     <!-- REGULAR QUANTITY -->
     <div class="print-field" id="bagTagQuantityField">

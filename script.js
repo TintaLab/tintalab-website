@@ -766,13 +766,13 @@ const PHOTO_SHEET_PRICE = 50;
 // PhotoTop additional charge PER A4 sheet
 const PHOTO_TOP_PRICES = {
   none: 0,
-  glossy: 15,
-  matte: 15,
-  leather: 17,
-  canvas: 17,
-  glitter: 20,
-  "3d": 20,
-  holo: 20
+  glossy: 10,
+  matte: 10,
+  leather: 10,
+  canvas: 10,
+  glitter: 10,
+  "3d": 10,
+  holo: 10
 };
 
 // Sizes in millimeters
@@ -801,7 +801,7 @@ function openPhotoPrintingModal() {
   document.getElementById("photoPrintingModal")
     .classList.add("active");
 
-  calculatePhotoPrinting();
+  updatePhotoOrderType();
 }
 
 function closePhotoPrintingModal() {
@@ -1081,8 +1081,42 @@ function calculateRequiredSheets(items) {
 
 
 // ---------- MAIN CALCULATOR ----------
+function updatePhotoOrderType() {
+  const orderType =
+    document.getElementById("photoOrderType").value;
+
+  const perPieceOptions =
+    document.getElementById("photoPerPieceOptions");
+
+  const mixedGrid =
+    document.querySelector(".photo-size-grid");
+
+  const help =
+    document.getElementById("photoOrderTypeHelp");
+
+  if (orderType === "piece") {
+    perPieceOptions.style.display = "";
+    mixedGrid.style.display = "none";
+
+    help.textContent =
+      "Best for a few prints of one specific photo size.";
+  } else {
+    perPieceOptions.style.display = "none";
+    mixedGrid.style.display = "";
+
+    help.textContent =
+      "Best for multiple photos or mixed sizes. We'll arrange them to maximize each A4 sheet.";
+  }
+
+  calculatePhotoPrinting();
+}
 
 function calculatePhotoPrinting() {
+const orderType =
+  document.getElementById("photoOrderType").value;
+
+const usageLabel =
+  document.getElementById("photoUsageLabel");
 
   const items = buildPhotoItems();
 
@@ -1094,7 +1128,121 @@ function calculatePhotoPrinting() {
 
   const photoTop =
     document.getElementById("photoTopFinish").value;
+const photoTopPreviews = {
+  glossy: {
+    name: "Glossy",
+    image: "assets/products/phototop/glossy.jpg"
+  },
+  matte: {
+    name: "Matte",
+    image: "assets/products/phototop/matte.jpg"
+  },
+  leather: {
+    name: "Leather",
+    image: "assets/products/phototop/leather.jpg"
+  },
+  canvas: {
+    name: "Canvas",
+    image: "assets/products/phototop/canvas.jpg"
+  },
+  glitter: {
+    name: "Glitter",
+    image: "assets/products/phototop/glitter.jpg"
+  },
+  "3d": {
+    name: "3D",
+    image: "assets/products/phototop/3D.jpg"
+  },
+  holo: {
+    name: "Holographic / Broken Glass",
+    image: "assets/products/phototop/brokenglass.jpg"
+  }
+};
 
+const photoTopPreview = document.getElementById("photoTopPreview");
+const photoTopPreviewName = document.getElementById("photoTopPreviewName");
+const photoTopPreviewImage = document.getElementById("photoTopPreviewImage");
+
+if (photoTop === "none") {
+  photoTopPreview.style.display = "none";
+  photoTopPreviewImage.src = "";
+} else {
+  const preview = photoTopPreviews[photoTop];
+
+  if (preview) {
+    photoTopPreviewName.textContent = preview.name;
+    photoTopPreviewImage.src = preview.image;
+    photoTopPreviewImage.alt = `${preview.name} PhotoTop sample`;
+    photoTopPreview.style.display = "";
+  }
+}
+// =====================================
+// PER PIECE / SMALL ORDER
+// =====================================
+
+if (orderType === "piece") {
+
+  const piecePrices = {
+    cute: 10,
+    wallet: 10,
+    "3r": 15,
+    "4r": 20,
+    "5r": 30,
+    a4: 50
+  };
+
+  const size =
+    document.getElementById("photoPieceSize").value;
+
+  const quantity = Math.max(
+    1,
+    Number(document.getElementById("photoPieceQuantity").value) || 1
+  );
+
+  const pricePerPiece = piecePrices[size];
+  const baseTotal = pricePerPiece * quantity;
+
+  // PhotoTop add-on
+  // Smaller sizes = +₱5 each
+  // A4 = +₱10 each
+  let photoTopPerPiece = 0;
+
+  if (photoTop !== "none") {
+    photoTopPerPiece = size === "a4" ? 10 : 5;
+  }
+
+  const photoTopTotal =
+    photoTopPerPiece * quantity;
+
+  const finalTotal =
+    baseTotal + photoTopTotal;
+
+  document.getElementById("photoTotalPieces").textContent =
+    `${quantity} pc${quantity > 1 ? "s" : ""}`;
+
+  usageLabel.textContent =
+    "Pricing Method";
+
+  document.getElementById("photoSheetsUsed").textContent =
+    "Per Piece";
+
+  document.getElementById("photoBaseTotal").textContent =
+    `₱${baseTotal.toFixed(2)}`;
+
+  document.getElementById("photoTopTotal").textContent =
+    `₱${photoTopTotal.toFixed(2)}`;
+
+  document.getElementById("photoFinalTotal").textContent =
+    `₱${finalTotal.toFixed(2)}`;
+
+  document.getElementById("photoUtilizationMessage").textContent =
+    photoTop === "none"
+      ? `📷 Per-piece pricing applied.`
+      : `✨ PhotoTop added at ₱${photoTopPerPiece} per photo.`;
+
+  return;
+}
+usageLabel.textContent = "Estimated A4 Sheets";
   const photoTopPerSheet =
     PHOTO_TOP_PRICES[photoTop];
 
@@ -1253,45 +1401,36 @@ Files will be submitted ready to print. I understand that extensive editing may 
 
 const LAMINATION_PRICES = {
   id: {
-    125: 20
+    125: 15
+  },
+  cute: {
+    125: 15
   },
   wallet: {
+    125: 15,
+    250: 20
+  },
+  "3r": {
     125: 20,
     250: 25
   },
-  "3r": {
+  "4r": {
     125: 25,
     250: 30
   },
-  "4r": {
+  "5r": {
     125: 30,
     250: 35
   },
-  "5r": {
-    125: 35,
-    250: 40
-  },
   a5: {
-    125: 35,
+    125: 30,
     250: 40
   },
   a4: {
-    125: 45,
-    250: 60
+    125: 40,
+    250: 50
   }
 };
-
-const SIGNAGE_PRICES = {
-  basic: {
-    125: 45,
-    250: 65
-  },
-  premium: {
-    125: 60,
-    250: 80
-  }
-};
-
 const SIGNAGE_DESIGN_FEE = 15;
 
 
@@ -1380,11 +1519,24 @@ function calculateLamination() {
     const size =
       document.getElementById("laminationSize").value;
 
-    const thickness =
-      document.getElementById("laminationThickness").value;
+    const thicknessSelect =
+  document.getElementById("laminationThickness");
 
-    basePrice =
-      LAMINATION_PRICES[size]?.[thickness] || 0;
+const heavyDutyOption =
+  thicknessSelect.querySelector('option[value="250"]');
+
+// ID Size and Cute Size currently use 125 microns only
+if (size === "id" || size === "cute") {
+  thicknessSelect.value = "125";
+  heavyDutyOption.disabled = true;
+} else {
+  heavyDutyOption.disabled = false;
+}
+
+const thickness = thicknessSelect.value;
+
+basePrice =
+  LAMINATION_PRICES[size]?.[thickness] || 0;
 
     selectedService.textContent =
       "Lamination Only";
@@ -1563,11 +1715,9 @@ function closeBagTagsModal() {
     .classList.remove("active");
 }
 
-
 // ---------- FIELD LOGIC ----------
 
 function updateBagTagFields() {
-
   const orderType =
     document.getElementById("bagTagOrderType").value;
 
@@ -1586,43 +1736,53 @@ function updateBagTagFields() {
   const resellerInfo =
     document.getElementById("bagTagResellerInfo");
 
+  const studentReseller =
+    document.getElementById("bagTagStudentReseller");
 
-  // Regular order allows custom quantity
-  if (orderType === "regular") {
+  const isReseller = studentReseller?.checked || false;
 
-    quantityField.style.display = "";
-    quantityInput.disabled = false;
+  // Quantity is always available
+  quantityField.style.display = "";
+  quantityInput.disabled = false;
+
+  // Custom orders require at least 10 pcs
+  if (orderType === "custom") {
+    quantityInput.min = 10;
+
+    if (Number(quantityInput.value) < 10) {
+      quantityInput.value = 10;
+    }
+  }
+
+  // Student reseller orders require at least 10 pcs
+ else if (isReseller) {
+  quantityInput.min = 1;
+}
+  
+
+  // Regular order
+  else {
+    quantityInput.min = 1;
 
     if (Number(quantityInput.value) < 1) {
       quantityInput.value = 1;
     }
+ }
 
-  } else {
-
-    quantityField.style.display = "none";
-    quantityInput.disabled = true;
-
-  }
-
-
-  // Available designs
+  // Available TintaLab designs
   designInfo.style.display =
     orderType === "custom" ? "none" : "";
-
 
   // Custom image instructions
   customInfo.style.display =
     orderType === "custom" ? "" : "none";
 
-
-  // Reseller instructions
+  // Student reseller instructions
   resellerInfo.style.display =
-    orderType === "reseller" ? "" : "none";
-
+    isReseller ? "" : "none";
 
   calculateBagTags();
 }
-
 
 // ---------- CALCULATOR ----------
 
@@ -1633,37 +1793,93 @@ function calculateBagTags() {
 
   const attachment =
     document.getElementById("bagTagAttachment");
+const studentReseller =
+  document.getElementById("bagTagStudentReseller")?.checked || false;
 
-  let quantity = 1;
-  let total = 35;
-  let regularEquivalent = 35;
+  let quantity = Math.max(
+  1,
+  Number(document.getElementById("bagTagQuantity").value) || 1
+);
 
+let displayQuantity = quantity;
+let total = 0;
+let regularEquivalent = quantity * 35;
+let freeTags = 0;
 
-  if (orderType === "regular") {
+// Student Reseller
+if (studentReseller && quantity >= 10) {
 
-    quantity = Math.max(
-      1,
-      Number(
-        document.getElementById("bagTagQuantity").value
-      ) || 1
-    );
+  displayQuantity = quantity;
+  total = quantity * 25;
+  regularEquivalent = quantity * 35;
 
-    total = quantity * 35;
+} else if (studentReseller && quantity < 10) {
 
-    regularEquivalent = total;
+  const fullBundles = Math.floor(quantity / 10);
+  const remainder = quantity % 10;
 
+  const remainderPrices = {
+    0: 0,
+    1: 35,
+    2: 70,
+    3: 100,
+    4: 135,
+    5: 170,
+    6: 200,
+    7: 235,
+    8: 270
+  };
+
+  total = fullBundles * 300;
+
+  if (remainder === 9) {
+    total += 300;
+    freeTags = 1;
   } else {
-
-    quantity =
-      BAG_TAG_PRICES[orderType].qty;
-
-    total =
-      BAG_TAG_PRICES[orderType].total;
-
-    regularEquivalent =
-      quantity * 35;
-
+    total += remainderPrices[remainder];
   }
+
+  displayQuantity = quantity + freeTags;
+  regularEquivalent = displayQuantity * 35;
+}
+
+// Custom Image
+else if (orderType === "custom") {
+  quantity = Math.max(10, quantity);
+  displayQuantity = quantity;
+  total = quantity * 30;
+  regularEquivalent = quantity * 35;
+}
+
+// Regular
+else {
+  const fullBundles = Math.floor(quantity / 10);
+  const remainder = quantity % 10;
+
+  const remainderPrices = {
+    0: 0,
+    1: 35,
+    2: 70,
+    3: 100,
+    4: 135,
+    5: 170,
+    6: 200,
+    7: 235,
+    8: 270
+  };
+
+  total = fullBundles * 300;
+
+  if (remainder === 9) {
+    total += 300;
+    freeTags = 1;
+  } else {
+    total += remainderPrices[remainder];
+  }
+
+  displayQuantity = quantity + freeTags;
+  regularEquivalent = displayQuantity * 35;
+}
 
 
   const savings =
@@ -1676,9 +1892,9 @@ function calculateBagTags() {
   // DISPLAY QUANTITY
 
   document.getElementById(
-    "bagTagPieces"
-  ).textContent =
-    `${quantity} pc${quantity > 1 ? "s" : ""}`;
+  "bagTagPieces"
+).textContent =
+  `${displayQuantity} pc${displayQuantity > 1 ? "s" : ""}`;
 
 
   // DISPLAY ATTACHMENT
@@ -1724,49 +1940,30 @@ function calculateBagTags() {
 
   // MESSAGE
 
-  const message =
-    document.getElementById(
-      "bagTagPriceMessage"
-    );
+ const message =
+  document.getElementById(
+    "bagTagPriceMessage"
+  );
 
+if (freeTags > 0) {
+  message.textContent =
+    `🎁 You get ${freeTags} FREE bag tag! You'll receive ${displayQuantity} pcs for ₱${total.toFixed(2)}.`;
 
-  if (orderType === "studentBundle") {
+} else if (studentReseller) {
+  message.textContent =
+    `💼 Student Reseller Pricing: ₱25 per tag. Minimum 10 pcs.`;
 
-    message.textContent =
-      "🎓 Student Bundle: 3 personalized bag tags for ₱100.";
+} else if (orderType === "custom") {
+  message.textContent =
+    `🖼️ Custom Image Batch: ₱30 per tag. Minimum 10 pcs. Different images may be submitted.`;
+
+} else {
+  message.textContent =
+    `✨ Regular promo pricing applied automatically. 3 pcs for ₱100 and 10 pcs for ₱300.`;
+
 
   }
-
-  else if (orderType === "bundle10") {
-
-    message.textContent =
-      "✨ 10-piece bundle saves you ₱50 compared with regular pricing.";
-
-  }
-
-  else if (orderType === "reseller") {
-
-    message.textContent =
-      "💼 Reseller cost: ₱25 per tag. Potential profit: up to ₱100 when sold at ₱35 each.";
-
-  }
-
-  else if (orderType === "custom") {
-
-    message.textContent =
-      "🖼️ Custom image batch: minimum 10 tags. Different images may be submitted.";
-
-  }
-
-  else {
-
-    message.textContent =
-      "Regular price: ₱35 per personalized bag tag.";
-
-  }
-
 }
-
 
 // ---------- MESSENGER ORDER ----------
 

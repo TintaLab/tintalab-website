@@ -698,3 +698,38 @@ body.modal-open{overflow:hidden}
 #copyBackToBackField .checkbox-option span {
   margin: 0;
 }
+/* PhotoTop preview inside Photo Printing calculator */
+.phototop-preview {
+  margin-top: 12px;
+}
+
+.phototop-preview img {
+  display: block;
+  width: 140px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.phototop-preview-title {
+  margin: 0 0 8px;
+}
+/* Student reseller checkbox */
+#bagTagStudentResellerField .checkbox-option {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+#bagTagStudentResellerField .checkbox-option input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+#bagTagStudentResellerField .checkbox-option span {
+  margin: 0;
+}
