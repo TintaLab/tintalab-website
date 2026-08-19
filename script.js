@@ -362,44 +362,17 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && sintraModal.classList.contains("open")) closeSintraModal();
 });
 const printingPrices = {
-  text: {
-    bw: {
-      short: 6,
-      a4: 7,
-      long: 8
-    },
-
-    partial: {
-      short: 8,
-      a4: 9,
-      long: 10
-    },
-
-    full: {
-      short: 12,
-      a4: 14,
-      long: 16
-    }
+  bw: {
+    text:      { short: 5, a4: 6, long: 7 },
+    textimage: { short: 6, a4: 7, long: 8 },
+    image:     { short: 8, a4: 9, long: 10 },
+    fullimage: { short: 9, a4: 10, long: 12 }
   },
-
-  image: {
-    bw: {
-      short: 8,
-      a4: 9,
-      long: 10
-    },
-
-    partial: {
-      short: 14,
-      a4: 16,
-      long: 17
-    },
-
-    full: {
-      short: 20,
-      a4: 22,
-      long: 27
-    }
+  color: {
+    text:      { short: 6, a4: 7, long: 8 },
+    textimage: { short: 8, a4: 9, long: 10 },
+    image:     { short: 9, a4: 10, long: 12 },
+    fullimage: { short: 10, a4: 11, long: 13 }
   }
 };
 
@@ -423,10 +396,10 @@ function closeDocumentPrinting() {
 
 function calculatePrinting() {
 
-  const docType =
+  const printColor =
     document.getElementById("docType").value;
 
-  const printType =
+  const pageContent =
     document.getElementById("printType").value;
 
   const paperSize =
@@ -445,7 +418,7 @@ function calculatePrinting() {
 
 
   const price =
-    printingPrices[docType][printType][paperSize];
+    printingPrices[printColor][pageContent][paperSize];
 
 
   const regularTotal =
@@ -574,8 +547,8 @@ function sendPrintingOrder() {
   const orderDetails =
 `TintaLab Document Printing Inquiry
 
-Document Type: ${docType.options[docType.selectedIndex].text}
-Print Type: ${printType.options[printType.selectedIndex].text}
+Print Color: ${docType.options[docType.selectedIndex].text}
+Page Content: ${printType.options[printType.selectedIndex].text}
 Paper Size: ${paperSize.options[paperSize.selectedIndex].text}
 Quantity: ${quantity} page/s
 Student Discount: ${student ? "Yes" : "No"}
@@ -1841,3 +1814,45 @@ I will send my selected design/theme or custom images through Messenger.`;
     });
 
 }
+
+// ========================================
+// DOCUMENT PRINTING V2 CATEGORY UI
+// First choice: Black & White / Colored
+// Second choice: Text Only / Text with Image / Image Only / Full Image
+// ========================================
+function setupDocumentPrintingCategories() {
+  const colorSelect = document.getElementById("docType");
+  const contentSelect = document.getElementById("printType");
+
+  if (!colorSelect || !contentSelect) return;
+
+  const colorField = colorSelect.closest(".print-field");
+  const contentField = contentSelect.closest(".print-field");
+
+  if (colorField) {
+    const label = colorField.querySelector("label");
+    if (label) label.textContent = "Print Color";
+  }
+
+  if (contentField) {
+    const label = contentField.querySelector("label");
+    if (label) label.textContent = "Page Content";
+  }
+
+  colorSelect.innerHTML = `
+    <option value="bw">Black & White</option>
+    <option value="color">Colored</option>
+  `;
+
+  contentSelect.innerHTML = `
+    <option value="text">Text Only</option>
+    <option value="textimage">Text with Image</option>
+    <option value="image">Image Only</option>
+    <option value="fullimage">Full Image</option>
+  `;
+
+  calculatePrinting();
+}
+
+document.addEventListener("DOMContentLoaded", setupDocumentPrintingCategories);
+
