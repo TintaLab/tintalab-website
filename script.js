@@ -136,7 +136,32 @@ sintraModal.innerHTML = `
         <div class="spec-grid">
           ${sintraConfig.specs.map(spec => `<div><small>${spec[0]}</small><b>${spec[1]}</b></div>`).join("")}
         </div>
-        <div class="base-price-row"><span>Base price</span><strong>₱${sintraConfig.basePrice}</strong></div>
+        <div class="base-price-row">
+  <span>Price per piece</span>
+  <strong id="sintraPricePerPiece">₱${sintraConfig.basePrice}</strong>
+</div>
+
+<p id="sintraSavings" class="photo-helper"></p>
+        <div class="print-field">
+  <label for="sintraQuantity">Quantity</label>
+  <input
+    type="number"
+    id="sintraQuantity"
+    min="1"
+    value="1"
+  >
+  <p class="photo-helper">
+    Bulk pricing is automatically applied based on quantity.
+  </p>
+</div>
+
+<div class="bulk-info">
+  <strong>Bulk Pricing</strong>
+  <p>1–2 pcs — ₱150 each</p>
+  <p>3–4 pcs — ₱145 each</p>
+  <p>5–9 pcs — ₱140 each</p>
+  <p>10+ pcs — ₱135 each</p>
+</div>
         <p class="config-label">Optional add-ons & savings</p>
         <div class="addon-list">
           ${sintraConfig.addOns.map(addon => {
@@ -187,9 +212,49 @@ const closeSintraModal = () => {
 
 const updateSintraTotal = () => {
   const selected = [...sintraModal.querySelectorAll('.addon-option input:checked')];
-  const total = sintraConfig.basePrice + selected.reduce((sum, box) => sum + Number(box.value), 0);
+
+  const quantity = Math.max(
+    1,
+    Number(sintraModal.querySelector('#sintraQuantity')?.value) || 1
+  );
+
+  let pricePerPiece = 150;
+
+  if (quantity >= 10) {
+    pricePerPiece = 135;
+  } else if (quantity >= 5) {
+    pricePerPiece = 140;
+  } else if (quantity >= 3) {
+    pricePerPiece = 145;
+  }
+
+  const addonsPerPiece = selected.reduce(
+    (sum, box) => sum + Number(box.value),
+    0
+  );
+
+  const total = (pricePerPiece + addonsPerPiece) * quantity;
+
+  const regularBaseTotal = sintraConfig.basePrice * quantity;
+  const bulkBaseTotal = pricePerPiece * quantity;
+  const savings = regularBaseTotal - bulkBaseTotal;
+
+  sintraModal.querySelector('#sintraPricePerPiece').textContent =
+    `₱${pricePerPiece}`;
+
+  sintraModal.querySelector('#sintraSavings').textContent =
+    savings > 0
+      ? `You save ₱${savings} with bulk pricing.`
+      : '';
+
   sintraModal.querySelector('#sintraTotal').textContent = `₱${total}`;
-  return { selected, total };
+
+  return {
+    selected,
+    total,
+    quantity,
+    pricePerPiece
+  };
 };
 
 document.addEventListener("click", (e) => {
@@ -272,6 +337,8 @@ sintraModal.addEventListener('click', (e) => {
   if (e.target === sintraModal) closeSintraModal();
 });
 sintraModal.querySelectorAll('.addon-option input').forEach(input => input.addEventListener('change', updateSintraTotal));
+sintraModal.querySelector('#sintraQuantity')
+.addEventListener('input', updateSintraTotal);
 
 sintraModal.querySelector('#copySintraOrder').addEventListener('click', async () => {
   const { selected, total } = updateSintraTotal();
@@ -1213,30 +1280,30 @@ Files will be submitted ready to print. I understand that extensive editing may 
 
 const LAMINATION_PRICES = {
   id: {
-    125: 10
+    125: 20
   },
   wallet: {
-    125: 15,
+    125: 20,
     250: 25
   },
   "3r": {
-    125: 15,
+    125: 25,
     250: 30
   },
   "4r": {
-    125: 20,
+    125: 30,
     250: 35
   },
   "5r": {
-    125: 25,
+    125: 35,
     250: 40
   },
   a5: {
-    125: 25,
+    125: 35,
     250: 40
   },
   a4: {
-    125: 35,
+    125: 45,
     250: 60
   }
 };
