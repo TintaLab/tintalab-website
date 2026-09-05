@@ -1431,6 +1431,11 @@ const LAMINATION_PRICES = {
     250: 50
   }
 };
+const SIGNAGE_PRICES = {
+  basic: { "125": 45, "250": 65 },
+  premium: { "125": 60, "250": 80 }
+};
+
 const SIGNAGE_DESIGN_FEE = 15;
 
 
@@ -1566,9 +1571,7 @@ basePrice =
         : 0;
 
     selectedService.textContent =
-      quality === "premium"
-        ? "Premium Printed Signage"
-        : "Basic Printed Signage";
+      `A4 ${quality === "premium" ? "Premium" : "Basic"} Printed Signage — ${thickness}-micron lamination`;
 
     designRow.style.display =
       designFee > 0 ? "" : "none";
@@ -1646,10 +1649,11 @@ Estimated Total: ${total}`;
 `TintaLab Printed & Laminated Signage Inquiry
 
 Service: Printed & Laminated Signage
+Finished Size: A4
 Print Quality: ${quality.options[quality.selectedIndex].text}
-Protection: ${thickness.options[thickness.selectedIndex].text}
+Lamination: ${thickness.options[thickness.selectedIndex].text}
 File / Design: ${design.options[design.selectedIndex].text}
-
+${design.value === "design" ? `Design Fee: ₱${SIGNAGE_DESIGN_FEE.toFixed(2)}\n` : ""}
 Estimated Total: ${total}`;
 
   }
